@@ -1,0 +1,43 @@
+/* Style the pagination dots */
+.swiper-pagination {
+    display: none; /* Adjust this value to lower the bullets */
+  }
+.swiper-pagination-bullet {
+    background-color: transparent;
+    border: 2px solid #B88E2F; /* Golden border */
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+
+  }
+  
+  /* Active pagination bullet with golden background */
+  .swiper-pagination-bullet-active {
+    background-color: #B88E2F; /* Golden color */
+  }
+  
+  /* Navigation buttons */
+  .swiper-button-next, .swiper-button-prev {
+    background-color: #B88E2F; /* Golden circle */
+    border-radius: 50%;
+    color: white;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hover effect for navigation buttons */
+  .swiper-button-next:hover, .swiper-button-prev:hover {
+    background-color: #96742B; /* Darker golden on hover */
+  }
+  
+  /* Change the arrow color */
+  .swiper-button-next::after, .swiper-button-prev::after {
+    font-size: 20px;
+    color: white; /* White arrow */
+  }
+  

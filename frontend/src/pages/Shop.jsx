@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
 import imgShop from "../assets/shop.png"
-import productsData from './productsData'; // Assuming you have a products data file
+import productsData from '../data/productsData.js'; // Assuming you have a products data file
 import ShopCard from '../components/ShopCard';
 import imgFrame from '../assets/frame.png';
 import Footer from '../components/Footer';
