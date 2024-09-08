@@ -9,6 +9,9 @@ export default {
       fontFamily: {
         sans: ['Poppins', 'sans-serif'],
       },
+      colors: {
+        golden: '#B88E2F', // Adjust the hex value as per your design
+      },
     },
   },
   plugins: [],
