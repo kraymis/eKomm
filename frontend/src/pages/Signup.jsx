@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { signup } from '../services/api';
 
 const Signup = () => {
-    const [name, setName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -14,7 +14,7 @@ const Signup = () => {
         setError(''); // Clear any previous errors
 
         try {
-            const userData = { name, email, password };
+            const userData = { username, email, password };
             const response = await signup(userData);
             navigate('/login');
         } catch (error) {
@@ -30,12 +30,12 @@ const Signup = () => {
                 {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="name">Name:</label>
+                        <label className="block text-gray-300 text-sm font-bold mb-2" htmlFor="username">Username:</label>
                         <input 
-                            id="name"
+                            id="username"
                             type="text" 
-                            value={name} 
-                            onChange={(e) => setName(e.target.value)} 
+                            value={username} 
+                            onChange={(e) => setUsername(e.target.value)} 
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         />
                     </div>
