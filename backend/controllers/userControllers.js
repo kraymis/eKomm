@@ -38,13 +38,13 @@ const registerUser = async (req, res) => {
 
 
 const loginUser = async (req, res) => {
-      const { username,email, password } = req.body;
+      const {username,email, password } = req.body;
       const user = await User.findOne({ email });
       if (user && ( await bcrypt.compare(password,user.password)))
       {
         res.status(201).json({ message: 'Login successfully',
             _id:user.id,
-            usernmae:user.username,
+            username:user.username,
             email:user.email,
             token:generateToken(user._id)
         });

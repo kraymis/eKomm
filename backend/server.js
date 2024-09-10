@@ -6,11 +6,16 @@ const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const bcrypt = require('bcryptjs');
+const cors = require('cors');
+
+
 
 // Initialize environment variables
 dotenv.config();
 
 const app = express();
+app.use(cors());
+
 
 // Middleware
 app.use(express.json());  // Parse JSON bodies
@@ -20,6 +25,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {

@@ -6,6 +6,7 @@ import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 // import Contact from './components/Contact';
 
 function App() {

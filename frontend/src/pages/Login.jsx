@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../services/api';
+import { isAuthenticated } from '../utils/auth';  // Import the auth utility
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -8,13 +10,22 @@ const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    useEffect(() => {
+        // If user is authenticated, redirect to home
+        if (isAuthenticated()) {
+            navigate('/');
+        }
+    }, [navigate]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError(''); // Clear any previous errors
 
         try {
             const userData = { email, password };
+            console.log('Logging in with:', userData);
             const response = await login(userData);
+            console.log('Login response:');
             localStorage.setItem('token', response.token); // Store the token
             navigate('/');
         } catch (error) {

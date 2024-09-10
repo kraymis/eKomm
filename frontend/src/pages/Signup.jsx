@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { signup } from '../services/api';
+import { isAuthenticated } from '../utils/auth';
 
 const Signup = () => {
     const [username, setUsername] = useState('');
@@ -8,6 +9,13 @@ const Signup = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    useEffect(() => {
+        // If user is authenticated, redirect to home
+        if (isAuthenticated()) {
+            navigate('/');
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
