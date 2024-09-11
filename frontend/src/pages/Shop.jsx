@@ -13,6 +13,7 @@ function Shop() {
   const [filterCategory, setFilterCategory] = useState('all');
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
+  const [currentProducts, setCurrentProducts] = useState([]);
   const [categories, setCategories] = useState([]); // State for categories
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
@@ -24,6 +25,7 @@ function Shop() {
       const categories = await getAllCategories(); // Fetch categories from the API
       setAllProducts(products);
       setFilteredProducts(products);
+      setCurrentProducts(products.slice(0, productsPerPage));
       setCategories(['all', ...categories]); // Add 'all' option to the categories
     };
     fetchData();
@@ -31,7 +33,6 @@ function Shop() {
 
   // Update filtered and sorted products
   useEffect(() => {
-    console.log("Use effect run")
     const updateFilteredProducts = () => {
       let products = allProducts;
       // console.log("Products", products)
@@ -49,7 +50,10 @@ function Shop() {
       }
 
       // Sort products
-      if (sortOption === 'price-asc') {
+      if (sortOption === 'default') {
+        // Default sort by product id (or another default criteria)
+        products.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      } else if (sortOption === 'price-asc') {
         products.sort((a, b) => a.price - b.price);
       } else if (sortOption === 'price-desc') {
         products.sort((a, b) => b.price - a.price);
@@ -57,23 +61,33 @@ function Shop() {
         products.sort((a, b) => a.name.localeCompare(b.name));
       } else if (sortOption === 'name-desc') {
         products.sort((a, b) => b.name.localeCompare(a.name));
+      } else if (sortOption === 'date-asc') {
+        // Sort by date created (oldest to newest)
+        products.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      } else if (sortOption === 'date-desc') {
+        // Sort by date created (newest to oldest)
+        products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       }
-      console.log("Products", products)
-
+      
+      
       return products;
     };
 
     const products = updateFilteredProducts();
     setFilteredProducts(products);
-    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts2 = products.slice(indexOfFirstProduct, indexOfLastProduct);
+    setCurrentProducts(currentProducts2);
+    
 
-  }, [searchTerm, sortOption, filterCategory]);
+  }, [searchTerm, sortOption, filterCategory,currentPage]);
 
   // Calculate the indices for the products to display on the current page
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  console.log("Current Products", currentProducts)
+  // const indexOfLastProduct = currentPage * productsPerPage;
+  // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  // const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  // console.log("Current Products", currentProducts)
 
   // Calculate total pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -89,7 +103,6 @@ function Shop() {
   // Handle sort
   const handleSort = (e) => {
     setSortOption(e.target.value);
-    console.log(e.target.value)
   };
 
   // Handle filter
@@ -127,6 +140,8 @@ function Shop() {
             <option value='price-desc'>Price: High to Low</option>
             <option value='name-asc'>Name: A to Z</option>
             <option value='name-desc'>Name: Z to A</option>
+            <option value='date-asc'>Latest</option>
+            <option value='date-desc'>Oldest</option>
           </select>
           <select 
             onChange={handleFilter} 
