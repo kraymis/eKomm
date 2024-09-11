@@ -7,8 +7,27 @@ import living2 from '../assets/living (2).png';
 import living3 from '../assets/living (3).png';
 import image1 from '../assets/image 1.png';
 import Footer from '../components/Footer';
+import { getLatestProducts } from '../services/api'; // Import the API function
 
 function Home() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getLatestProducts();
+        setProducts(data);
+      } catch (error) {
+        setError('Failed to fetch products');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
 
 
@@ -62,55 +81,22 @@ function Home() {
         <div className='flex flex-col justify-center items-center w-full h-auto mt-24 px-8'>
           <h5 className='text-[#333] font-bold text-2xl'>Our Prodcuts</h5>
           <p className='text-[#666666] font-light text-base'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          <div className='flex flex-wrap justify-center items-center w-full p-8 gap-8 '>
-          <ShopCard
-            image={image1}
-            name='Living room'
-            description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            price={200}
-          />
-          <ShopCard
-            image={image1}
-            name='Living room'
-            description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            price={200}
-          />
-          <ShopCard
-            image={image1}
-            name='Living room'
-            description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            price={200}
-          />
-          <ShopCard
-            image={image1}
-            name='Living room'
-            description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            price={200}
-          />
-          <ShopCard
-            image={image1}
-            name='Living room'
-            description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            price={200}
-          />
-          <ShopCard
-            image={image1}
-            name='Living room'
-            description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            price={200}
-          />
-          <ShopCard
-            image={image1}
-            name='Living room'
-            description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            price={200}
-          />
-          <ShopCard
-            image={image1}
-            name='Living room'
-            description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-            price={200}
-          />
+          <div className='flex flex-wrap justify-center items-center w-full p-8 gap-8'>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            products.map(product => (
+              <ShopCard
+                key={product._id}
+                image={product.images[0]} // Display the first image
+                name={product.name}
+                description={product.description}
+                price={product.price}
+              />
+            ))
+          )}
         </div>
         <button className='mt-4 hover:bg-[#B88E2F] border-2 border-[#B88E2F] hover:text-white px-10 py-4 font-medium w-[20vw] transition-colors duration-300 hover:border-0 bg-white text-[#B88E2F]'>
         Show more

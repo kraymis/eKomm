@@ -25,3 +25,38 @@ export const login = async (userData) => {
         throw error;
     }
 };
+
+// Function to get all products
+export const getAllProducts = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/products/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      throw error;
+    }
+  };
+
+//Function to get 8 latest products
+  export const getLatestProducts = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/products/latest`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching latest products:', error);
+      throw error;
+    }
+  };
+
+//Function to get all categories
+  export const getAllCategories = async () => {
+    try {
+      const response = await fetch(`${API_URL}/products/meow`);
+      const data = await response.json();
+      console.log('Categories:', data);
+      return data;
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      return [];
+    }
+  };

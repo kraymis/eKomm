@@ -26,8 +26,33 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(product);
 });
 
+// Function to get the latest 8 products
+const getLatestProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find()
+    .sort({ createdAt: -1 }) // Sort by creation date in descending order
+    .limit(8); // Limit to 8 products
+  res.json(products);
+});
+
+const getAllCategories = async (req, res) => {
+  try {
+    console.log('Fetching categories...');
+    const categories = await Product.distinct('category');
+    console.log('Categories:', categories);
+    res.json(categories);
+
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
 module.exports = {
+  getLatestProducts,
   getProducts,
   getProductById,
   createProduct,
+  getAllCategories
 };

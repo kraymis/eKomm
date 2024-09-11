@@ -1,48 +1,68 @@
 import { useEffect, useState } from 'react';
 import NavBar from '../components/NavBar';
-import imgShop from "../assets/shop.png"
+import imgShop from "../assets/shop.png";
 import productsData from '../data/productsData.js'; // Assuming you have a products data file
 import ShopCard from '../components/ShopCard';
 import imgFrame from '../assets/frame.png';
 import Footer from '../components/Footer';
+import { getAllProducts, getAllCategories } from '../services/api'; // Import the API functions
 
 function Shop() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('default');
   const [filterCategory, setFilterCategory] = useState('all');
-  const [filteredProducts, setFilteredProducts] = useState(productsData);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]); // State for categories
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
 
-  // Filter and sort products based on search term, sort option, and filter category
-  const filterAndSortProducts = (search, sort, filter) => {
-    let products = productsData;
-
-    if (search) {
-      products = products.filter(product =>
-        product.name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    if (filter !== 'all') {
-      products = products.filter(product => product.category === filter);
-    }
-
-    if (sort === 'price-asc') {
-      products.sort((a, b) => a.price - b.price);
-    } else if (sort === 'price-desc') {
-      products.sort((a, b) => b.price - a.price);
-    } else if (sort === 'name-asc') {
-      products.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sort === 'name-desc') {
-      products.sort((a, b) => b.name.localeCompare(a.name));
-    }
-
-    setFilteredProducts(products);
-  };
-
+  // Fetch products and categories from the API
   useEffect(() => {
-    filterAndSortProducts(searchTerm, sortOption, filterCategory);
+    const fetchData = async () => {
+      const products = await getAllProducts(); // Fetch products from the API
+      const categories = await getAllCategories(); // Fetch categories from the API
+      setFilteredProducts(products);
+      setCategories(['all', ...categories]); // Add 'all' option to the categories
+    };
+    fetchData();
+  }, []);
+
+  // Update filtered and sorted products
+  useEffect(() => {
+    console.log("Use effect run")
+    const updateFilteredProducts = () => {
+      let products = [...filteredProducts];
+      console.log("Products", products)
+
+      // Filter by search term
+      if (searchTerm) {
+        products = products.filter(product =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+
+      // Filter by category
+      if (filterCategory !== 'all') {
+        products = products.filter(product => product.category === filterCategory);
+      }
+
+      // Sort products
+      if (sortOption === 'price-asc') {
+        products.sort((a, b) => a.price - b.price);
+      } else if (sortOption === 'price-desc') {
+        products.sort((a, b) => b.price - a.price);
+      } else if (sortOption === 'name-asc') {
+        products.sort((a, b) => a.name.localeCompare(b.name));
+      } else if (sortOption === 'name-desc') {
+        products.sort((a, b) => b.name.localeCompare(a.name));
+      }
+
+      return products;
+    };
+
+    const products = updateFilteredProducts();
+    setFilteredProducts(products);
+
   }, [searchTerm, sortOption, filterCategory]);
 
   // Calculate the indices for the products to display on the current page
@@ -107,11 +127,9 @@ function Shop() {
             value={filterCategory} 
             className='filter-dropdown w-full md:w-1/4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#B88E2F] transition-all duration-300'
           >
-            <option value='all'>All Categories</option>
-            <option value='dining'>Dining</option>
-            <option value='living'>Living</option>
-            <option value='bedroom'>Bedroom</option>
-            {/* Add more categories as needed */}
+            {categories.map(category => (
+              <option key={category} value={category}>{category.charAt(0).toUpperCase() + category.slice(1)}</option>
+            ))}
           </select>
         </div>
       </div>
