@@ -8,7 +8,7 @@ import ShopCard from './ShopCard';  // Import ShopCard component
 import productsData from '../data/productsData';  // Import product data
 import '../styling/ProductSlider.css'; // Custom CSS for pagination and navigation
 
-const ProductSlider = () => {
+const ProductSlider = ({products}) => {
   return (
     <div style={{ width: '90%', height: '400px'}}>
       <Swiper
@@ -26,7 +26,7 @@ const ProductSlider = () => {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper"
       >
-        {productsData.map((product) => (
+        {products.map((product) => (
           <SwiperSlide key={product.id}>
             <ShopCard
               image={product.image}

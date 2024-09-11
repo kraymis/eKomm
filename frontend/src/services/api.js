@@ -59,3 +59,25 @@ export const getAllProducts = async () => {
       return [];
     }
   };
+
+  export const getProductDetails = async (id) => {
+    try {
+      console.log('Fetching product details...',id);
+      const response = await axios.get(`${API_URL}/products/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+      throw error;
+    }
+  };
+
+  // Function to get related products by category
+export const getRelatedProductsByCategory = async (categoryId) => {
+  try {
+    const response = await axios.get(`${API_URL}/products/related/${categoryId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching related products:', error);
+    throw error; // Rethrow to handle it in the component
+  }
+};

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, getProductById ,createProduct,getLatestProducts, getAllCategories} = require('../controllers/productControllers');
+const { getProducts, getProductById ,createProduct,getLatestProducts, getAllCategories,getRelatedProductsByCategory} = require('../controllers/productControllers');
 
 // Get all products
 router.get('/', getProducts);
@@ -8,9 +8,19 @@ router.get('/latest', getLatestProducts);
 router.get('/meow', getAllCategories);
 
 // Get a single product by ID
-router.get('/:id', getProductById);
-
+router.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    
+    // Call the independent function
+    const result = await getProductById(id);
+  
+    // Respond with the status and data
+    res.status(result.status).json(result.data);
+  });
+  
 router.post('/', createProduct);
+router.get('/related/:categoryId', getRelatedProductsByCategory);
+
 
 // router.get('/categories', getAllCategories);
 

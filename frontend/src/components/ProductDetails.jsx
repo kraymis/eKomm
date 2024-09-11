@@ -5,13 +5,15 @@ import img3 from "../assets/image 3.png";
 import img4 from "../assets/image 4.png";
 import img5 from "../assets/image 5.png";
 
-const ProductDetails = () => {
-  const [mainImage, setMainImage] = useState(img1);
+const ProductDetails = ({product}) => {
+  const [mainImage, setMainImage] = useState(product.images[0]);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
 
-  const images = [img1, img2, img3, img4, img5];
+  const images = product.images;
+
+  // setMainImage(product.images[0]);
 
   const handleAddToCart = () => {
     const productDetails = {
@@ -25,10 +27,14 @@ const ProductDetails = () => {
     // You can send this object to your backend or cart functionality
   };
 
+  if (!product) {
+    return <p>No product details available</p>;  // Fallback UI when product is null
+  }
+
   return (
-    <div className="flex justify-center items-center md:flex-row p-4 px-16  space-x-24 ">
+    <div className="flex justify-center items-center h-[60vh] md:flex-row p-4 px-16  space-x-24 ">
       {/* Image Gallery */}
-      <div className="flex w-[45%] max-h-[75vh]">
+      <div className="flex w-[45%] max-h-[75vh] h-full justify-center gap-8 ">
         <div className="flex flex-col items-center justify-center gap-4 overflow-y-auto w-[20%] ">
           {images.map((img, index) => (
             <div className="h-1/6">
@@ -37,14 +43,14 @@ const ProductDetails = () => {
                 src={img}
                 alt={`Thumbnail ${index + 1}`}
                 onClick={() => setMainImage(img)}
-                className={`w-full h-full object-cover cursor-pointerborder rounded-lg ${
+                className={`w-full h-full object-cover cursor-pointer border rounded-lg ${
                   mainImage === img ? "border-blue-500" : "border-gray-300"
                 }`}
               />
             </div>
           ))}
         </div>
-        <div className="flex-grow flex justify-center items-center">
+        <div className="w-[80%] flex justify-center items-center">
           <img
             src={mainImage}
             alt="Main Product"
@@ -55,19 +61,15 @@ const ProductDetails = () => {
 
       {/* Product Info */}
         <div className="flex flex-col justify-between gap-2 w-[55%] ">
-            <h1 className="text-5xl font-light">Product Name</h1>
-            <h1 className="text-2xl text-gray-600 font-light">2500 DA</h1>
+            <h1 className="text-5xl font-light">{product.name}</h1>
+            <h1 className="text-2xl text-gray-600 font-light">{product.price}</h1>
             <div className="flex items-center space-x-1">
                 <span className="text-yellow-500">★★★★☆</span>
-                <span className="text-gray-600">(4.5)</span>
+                <span className="text-gray-600">{product.averageRating}</span>
             </div>
             <div className="w-[80%]">
                 <p className="text-black">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae
-                        fringilla mauris. Sed euismod, nisl id aliquam lacinia, mauris nunc
-                        ultricies nunc, id tincidunt nisl nunc vitae nunc. Sed euismod, nisl id
-                        aliquam lacinia, mauris nunc ultricies nunc, id tincidunt nisl nunc vitae
-                        nunc.
+                {product.description}
                 </p>
             </div>
             
@@ -75,7 +77,7 @@ const ProductDetails = () => {
                 <div>
                     <label className="block text-gray-600 my-4">Size</label>
                     <div className="flex space-x-4">
-                        {["S", "M", "L"].map((size) => (
+                        {product.availableSizes.map((size) => (
                         <div
                             key={size}
                             onClick={() => setSelectedSize(size)}
@@ -92,18 +94,14 @@ const ProductDetails = () => {
                 <div>
                     <label className="block text-gray-600 my-4">Color</label>
                     <div className="flex space-x-4">
-                        {[
-                        { name: "Red", colorCode: "#ff0000" },
-                        { name: "Blue", colorCode: "#0000ff" },
-                        { name: "Green", colorCode: "#008000" },
-                        ].map((color) => (
+                        {product.availableColors.map((color) => (
                         <div
-                            key={color.name}
-                            onClick={() => setSelectedColor(color.name)}
+                            key={color.colorName}
+                            onClick={() => setSelectedColor(color.colorName)}
                             className={`cursor-pointer border-2 rounded-full w-8 h-8 flex items-center justify-center ${
-                            selectedColor === color.name ? "border-blue-500" : "border-gray-300"
+                            selectedColor === color.colorName ? "border-blue-500" : "border-gray-300"
                             }`}
-                            style={{ backgroundColor: color.colorCode }}
+                            style={{ backgroundColor: color.hexCode }}
                         />
                         ))}
                     </div>

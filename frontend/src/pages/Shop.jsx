@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';  // Import useLocation to access URL params
 import NavBar from '../components/NavBar';
 import imgShop from "../assets/shop.png";
 import productsData from '../data/productsData.js'; // Assuming you have a products data file
@@ -18,6 +19,8 @@ function Shop() {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
 
+  const location = useLocation();  // Use useLocation to access URL params
+
   // Fetch products and categories from the API
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +32,18 @@ function Shop() {
       setCategories(['all', ...categories]); // Add 'all' option to the categories
     };
     fetchData();
+    console.log("run first")
   }, []);
+
+    // Read category filter from URL
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const categoryFromQuery = query.get('category');
+    if (categoryFromQuery) {
+      setFilterCategory(categoryFromQuery);
+    }
+    console.log("run second")
+  }, [location.search]);
 
   // Update filtered and sorted products
   useEffect(() => {
@@ -79,6 +93,7 @@ function Shop() {
     const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
     const currentProducts2 = products.slice(indexOfFirstProduct, indexOfLastProduct);
     setCurrentProducts(currentProducts2);
+    console.log("run third")
     
 
   }, [searchTerm, sortOption, filterCategory,currentPage]);
