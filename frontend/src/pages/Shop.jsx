@@ -12,6 +12,7 @@ function Shop() {
   const [sortOption, setSortOption] = useState('default');
   const [filterCategory, setFilterCategory] = useState('all');
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]); // State for categories
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 8;
@@ -21,6 +22,7 @@ function Shop() {
     const fetchData = async () => {
       const products = await getAllProducts(); // Fetch products from the API
       const categories = await getAllCategories(); // Fetch categories from the API
+      setAllProducts(products);
       setFilteredProducts(products);
       setCategories(['all', ...categories]); // Add 'all' option to the categories
     };
@@ -31,8 +33,8 @@ function Shop() {
   useEffect(() => {
     console.log("Use effect run")
     const updateFilteredProducts = () => {
-      let products = [...filteredProducts];
-      console.log("Products", products)
+      let products = allProducts;
+      // console.log("Products", products)
 
       // Filter by search term
       if (searchTerm) {
@@ -56,12 +58,14 @@ function Shop() {
       } else if (sortOption === 'name-desc') {
         products.sort((a, b) => b.name.localeCompare(a.name));
       }
+      console.log("Products", products)
 
       return products;
     };
 
     const products = updateFilteredProducts();
     setFilteredProducts(products);
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
   }, [searchTerm, sortOption, filterCategory]);
 
@@ -69,6 +73,7 @@ function Shop() {
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  console.log("Current Products", currentProducts)
 
   // Calculate total pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -84,6 +89,7 @@ function Shop() {
   // Handle sort
   const handleSort = (e) => {
     setSortOption(e.target.value);
+    console.log(e.target.value)
   };
 
   // Handle filter
@@ -142,6 +148,7 @@ function Shop() {
             price={product.price}
             description={product.description}
             image={product.image}
+            category={product.category}
           />
         ))}
       </div>

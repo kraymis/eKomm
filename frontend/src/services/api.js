@@ -53,7 +53,6 @@ export const getAllProducts = async () => {
     try {
       const response = await fetch(`${API_URL}/products/meow`);
       const data = await response.json();
-      console.log('Categories:', data);
       return data;
     } catch (error) {
       console.error('Error fetching categories:', error);
