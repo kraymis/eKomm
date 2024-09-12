@@ -22,87 +22,92 @@ function Shop() {
   const location = useLocation();  // Use useLocation to access URL params
 
   // Fetch products and categories from the API
-  useEffect(() => {
-    const fetchData = async () => {
-      const products = await getAllProducts(); // Fetch products from the API
-      const categories = await getAllCategories(); // Fetch categories from the API
-      setAllProducts(products);
-      setFilteredProducts(products);
-      setCurrentProducts(products.slice(0, productsPerPage));
-      setCategories(['all', ...categories]); // Add 'all' option to the categories
-    };
-    fetchData();
-    console.log("run first")
-  }, []);
+    useEffect(() => {
+      const fetchData = async () => {
+        const products = await getAllProducts(); // Fetch products from the API
+        const categories = await getAllCategories(); // Fetch categories from the API
+        setAllProducts(products);
+        setFilteredProducts(products);
+        setCurrentProducts(products.slice(0, productsPerPage));
+        setCategories(['all', ...categories]); // Add 'all' option to the categories
+      };
+      fetchData();
+      console.log("run first")
+    }, []);
 
     // Read category filter from URL
-  useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const categoryFromQuery = query.get('category');
-    if (categoryFromQuery) {
-      setFilterCategory(categoryFromQuery);
-    }
-    console.log("run second")
-  }, [location.search]);
-
-  // Update filtered and sorted products
-  useEffect(() => {
-    const updateFilteredProducts = () => {
-      let products = allProducts;
-      // console.log("Products", products)
-
-      // Filter by search term
-      if (searchTerm) {
-        products = products.filter(product =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+    useEffect(() => {
+      const query = new URLSearchParams(location.search);
+      const categoryFromQuery = query.get('category');
+      if (categoryFromQuery) {
+        setFilterCategory(categoryFromQuery);
       }
+      console.log("run second")
+    }, [location.search]);
 
-      // Filter by category
-      if (filterCategory !== 'all') {
-        products = products.filter(product => product.category === filterCategory);
-      }
+    // Update filtered and sorted products
+    useEffect(() => {
+      const updateFilteredProducts = async () => {
+        let products = await getAllProducts();
+        // console.log(products)
+        console.log("running here");
 
-      // Sort products
-      if (sortOption === 'default') {
-        // Default sort by product id (or another default criteria)
-        products.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      } else if (sortOption === 'price-asc') {
-        products.sort((a, b) => a.price - b.price);
-      } else if (sortOption === 'price-desc') {
-        products.sort((a, b) => b.price - a.price);
-      } else if (sortOption === 'name-asc') {
-        products.sort((a, b) => a.name.localeCompare(b.name));
-      } else if (sortOption === 'name-desc') {
-        products.sort((a, b) => b.name.localeCompare(a.name));
-      } else if (sortOption === 'date-asc') {
-        // Sort by date created (oldest to newest)
-        products.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-      } else if (sortOption === 'date-desc') {
-        // Sort by date created (newest to oldest)
-        products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      }
+        // Filter by search term
+        if (searchTerm) {
+          products = products.filter(product =>
+            product.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        }
+
+        // Filter by category
+        if (filterCategory !== 'all') {
+          products = products.filter(product => product.category === filterCategory);
+        }
+
+        // Sort products
+        if (sortOption === 'default') {
+          // Default sort by product id (or another default criteria)
+          products.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        } else if (sortOption === 'price-asc') {
+          products.sort((a, b) => a.price - b.price);
+        } else if (sortOption === 'price-desc') {
+          products.sort((a, b) => b.price - a.price);
+        } else if (sortOption === 'name-asc') {
+          products.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortOption === 'name-desc') {
+          products.sort((a, b) => b.name.localeCompare(a.name));
+        } else if (sortOption === 'date-asc') {
+          // Sort by date created (oldest to newest)
+          products.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        } else if (sortOption === 'date-desc') {
+          // Sort by date created (newest to oldest)
+          products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+        
+        
+        return products;
+      };
+
+      const fetchAndSetProducts = async () => {
+        const products = await updateFilteredProducts();
+        console.log(products);
+        setFilteredProducts(products);
+        
+        const indexOfLastProduct = currentPage * productsPerPage;
+        const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+        const currentProducts2 = products.slice(indexOfFirstProduct, indexOfLastProduct);
+        setCurrentProducts(currentProducts2);
+        
+        console.log("run third");
+        console.log(filterCategory);
+      };
+
+      fetchAndSetProducts();
+
       
-      
-      return products;
-    };
 
-    const products = updateFilteredProducts();
-    setFilteredProducts(products);
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts2 = products.slice(indexOfFirstProduct, indexOfLastProduct);
-    setCurrentProducts(currentProducts2);
-    console.log("run third")
-    
+    }, [searchTerm, sortOption, filterCategory,currentPage]);
 
-  }, [searchTerm, sortOption, filterCategory,currentPage]);
-
-  // Calculate the indices for the products to display on the current page
-  // const indexOfLastProduct = currentPage * productsPerPage;
-  // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  // const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  // console.log("Current Products", currentProducts)
 
   // Calculate total pages
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
