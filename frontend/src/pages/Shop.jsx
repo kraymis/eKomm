@@ -177,12 +177,13 @@ function Shop() {
 
       <div className='flex flex-wrap justify-center items-center w-full p-8 gap-8'>
         {currentProducts.map(product => (
-          <ShopCard 
+          <ShopCard
+            id={product._id} // Pass product ID
             key={product.id} 
             name={product.name} 
             price={product.price}
             description={product.description}
-            image={product.image}
+            image={product.images[0]}
             category={product.category}
           />
         ))}
@@ -203,6 +204,9 @@ function Shop() {
 
       <div className='w-full h-auto mt-16'>
         <img src={imgFrame} alt='frame' className='w-full h-full' />
+      </div>
+      <div className='w-full h-auto mt-16'>
+      <img src="https://images.pexels.com/photos/2582734/pexels-photo-2582734.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Test Image" />
       </div>
 
       <Footer />

@@ -10,7 +10,7 @@ import '../styling/ProductSlider.css'; // Custom CSS for pagination and navigati
 
 const ProductSlider = ({products}) => {
   return (
-    <div style={{ width: '90%', height: '400px'}}>
+    <div style={{ width: '90%', height: '22vw'}}>
       <Swiper
         spaceBetween={25}
         slidesPerView={3}  // Show 3 slides at a time
@@ -27,9 +27,11 @@ const ProductSlider = ({products}) => {
         className="mySwiper"
       >
         {products.map((product) => (
-          <SwiperSlide key={product.id}>
+          <SwiperSlide key={product.id} className='p-4'>
             <ShopCard
-              image={product.image}
+              key={product.id}
+              id={product._id} // Pass product ID
+              image={product.images[0]}
               name={product.name}
               description={product.description}
               price={product.price}

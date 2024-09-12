@@ -32,29 +32,29 @@ const ProductDetails = ({product}) => {
   }
 
   return (
-    <div className="flex justify-center items-center h-[60vh] md:flex-row p-4 px-16  space-x-24 ">
+    <div className="flex justify-center items-center h-[60vh] md:flex-row p-4 px-16  space-x-24 w-[90%] mx-8 ">
       {/* Image Gallery */}
       <div className="flex w-[45%] max-h-[75vh] h-full justify-center gap-8 ">
-        <div className="flex flex-col items-center justify-center gap-4 overflow-y-auto w-[20%] ">
+        <div className="flex flex-col items-center justify-center gap-4 overflow-y-auto w-[20%]">
           {images.map((img, index) => (
-            <div className="h-1/6">
+            <div className="relative h-1/6 w-[80%] overflow-hidden">
               <img
                 key={index}
                 src={img}
                 alt={`Thumbnail ${index + 1}`}
                 onClick={() => setMainImage(img)}
-                className={`w-full h-full object-cover cursor-pointer border rounded-lg ${
+                className={`absolute inset-0 w-full h-full object-cover cursor-pointer border rounded-lg ${
                   mainImage === img ? "border-blue-500" : "border-gray-300"
                 }`}
               />
             </div>
           ))}
         </div>
-        <div className="w-[80%] flex justify-center items-center">
+        <div className="w-[80%] flex justify-center items-center relative overflow-hidden">
           <img
             src={mainImage}
             alt="Main Product"
-            className="h-full object-cover rounded-xl"
+            className="absolute inset-0 w-full h-full object-cover rounded-xl"
           />
         </div>
       </div>

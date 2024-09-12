@@ -64,8 +64,37 @@ const getRelatedProductsByCategory = asyncHandler(async (req, res) => {
 });
 
 
+// Delete all products
+const deleteAllProducts = asyncHandler(async (req, res) => {
+  try {
+    await Product.deleteMany({});
+    res.status(200).json({ message: 'All products deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Delete a single product by ID
+const deleteProductById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const product = await Product.findByIdAndDelete(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
 
 module.exports = {
+  deleteProductById,
+  deleteAllProducts,
   getLatestProducts,
   getRelatedProductsByCategory,
   getProducts,

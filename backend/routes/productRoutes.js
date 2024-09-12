@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, getProductById ,createProduct,getLatestProducts, getAllCategories,getRelatedProductsByCategory} = require('../controllers/productControllers');
+const { getProducts, getProductById ,createProduct,getLatestProducts, getAllCategories,getRelatedProductsByCategory,deleteProductById,deleteAllProducts} = require('../controllers/productControllers');
 
 // Get all products
 router.get('/', getProducts);
@@ -20,6 +20,12 @@ router.get('/:id', async (req, res) => {
   
 router.post('/', createProduct);
 router.get('/related/:categoryId', getRelatedProductsByCategory);
+
+router.delete('/all', deleteAllProducts);
+
+// Route to delete a single product by ID
+router.delete('/:id', deleteProductById);
+
 
 
 // router.get('/categories', getAllCategories);

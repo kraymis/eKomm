@@ -27,8 +27,9 @@ function Home() {
     };
 
     fetchProducts();
+  
   }, []);
-
+  
 
 
   return (
@@ -89,11 +90,13 @@ function Home() {
           ) : (
             products.map(product => (
               <ShopCard
+                id={product._id} // Pass product ID
                 key={product._id}
                 image={product.images[0]} // Display the first image
                 name={product.name}
                 description={product.description}
                 price={product.price}
+                onClick={() => navigate(`/product/${product._id}`)}
               />
             ))
           )}
