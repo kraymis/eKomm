@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api';
+const getAuthToken = () => localStorage.getItem('token'); // Retrieve token from local storage
+
 
 export const signup = async (userData) => {
     try {
@@ -83,11 +85,10 @@ export const getRelatedProductsByCategory = async (categoryId) => {
 
 export const addToCart = async (productId, quantity) => {
   try {
-    const token = localStorage.getItem('token'); // Get token from localStorage
 
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getAuthToken()}`,
       },
     };
 
@@ -104,4 +105,44 @@ export const addToCart = async (productId, quantity) => {
     console.error('Error adding to cart', error.response?.data || error.message);
     throw error.response?.data || error.message; // Throw error to handle it in the component
   }
+};
+
+
+const api = axios.create({
+    baseURL: API_URL, // Use the API_URL from environment variables
+    headers: {
+        'Authorization': `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json',
+    },
+});
+
+export const fetchCart = async () => {
+    try {
+        const response = await api.get('/cart');
+        console.log('Cart:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        throw error;
+    }
+};
+
+export const updateCartItemQuantity = async (itemId, quantity) => {
+    try {
+        const response = await api.patch(`/cart/${itemId}`, { quantity });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating quantity:', error);
+        throw error;
+    }
+};
+
+export const deleteCartItem = async (itemId) => {
+    try {
+        const response = await api.delete(`/cart/${itemId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting item:', error);
+        throw error;
+    }
 };

@@ -36,7 +36,9 @@ const addToCart = asyncHandler(async (req, res) => {
       productId: productId,
       name: product.name,
       price: product.price,
-      quantity: quantity || 1
+      quantity: quantity || 1,
+      image:product.images[0]
+
     });
   }
 
@@ -49,8 +51,67 @@ const addToCart = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Product added to cart', cart });
 });
 
+// Get cart items for the user
+const getCart = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
 
+  const cart = await Cart.findOne({ user: userId });
+  
+  if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+  }
+
+  res.json(cart);
+});
+
+// Update item quantity in cart
+const updateCartItemQuantity = asyncHandler(async (req, res) => {
+  const { quantity } = req.body;
+  const userId = req.user._id;
+
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+  }
+
+  const itemIndex = cart.cartItems.findIndex(item => item._id.toString() === req.params.id);
+  if (itemIndex === -1) {
+      return res.status(404).json({ message: 'Item not found in cart' });
+  }
+
+  cart.cartItems[itemIndex].quantity = quantity;
+  cart.total = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  await cart.save();
+
+  res.json(cart);
+});
+
+// Delete item from cart
+const deleteCartItem = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+  }
+
+  const itemIndex = cart.cartItems.findIndex(item => item._id.toString() === req.params.id);
+  if (itemIndex === -1) {
+      return res.status(404).json({ message: 'Item not found in cart' });
+  }
+
+  cart.cartItems.splice(itemIndex, 1);
+  cart.total = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  await cart.save();
+
+  res.json({ message: 'Item removed from cart', cart });
+});
 
 module.exports = {
-  addToCart
+  addToCart,
+  getCart,
+  updateCartItemQuantity,
+  deleteCartItem
 };
