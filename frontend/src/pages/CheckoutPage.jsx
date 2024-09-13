@@ -1,17 +1,27 @@
 import React, { useState,useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import imgShop from "../assets/shop.png"
 import imgFrame from '../assets/frame.png';
 import Footer from '../components/Footer';
 import { placeOrder,fetchCart } from '../services/api'; // Import the function
-
+import { isAuthenticated } from '../utils/auth'; // Import the function
 
 const CheckoutPage = () => {
+  const navigate = useNavigate();  // Initialize useNavigate
+  useEffect(() => {
+    // If user is authenticated, redirect to home
+    if (!isAuthenticated()) {
+        navigate('/');
+    }
+}, [navigate]);
+
   const [paymentMethod, setPaymentMethod] = useState('Cash On Delivery');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [total,setTotal] = useState(0);
+  const [successMessage, setSuccessMessage] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -70,6 +80,23 @@ const CheckoutPage = () => {
       try {
         await placeOrder(orderData);
         console.log('Order placed successfully!');
+        setSuccessMessage('Order placed successfully!');
+        // Clear form fields
+        setFormData({
+          firstName: '',
+          lastName: '',
+          company: '',
+          country: 'Sri Lanka',
+          streetAddress: '',
+          city: '',
+          province: 'Western Province',
+          zipCode: '',
+          phone: '',
+          email: '',
+          additionalInfo: '',
+        });
+        setCartItems([]); // Clear cart items
+        setTotal(0); // Reset total
         // Optionally, redirect or show a success message
       } catch (error) {
         console.error('Error placing order:', error);
@@ -77,7 +104,10 @@ const CheckoutPage = () => {
       }
       console.log(orderData);
     };
-
+    
+    const handleCloseSuccessMessage = () => {
+      setSuccessMessage(''); // Clear success message
+    };
 
 
 
@@ -287,12 +317,27 @@ return (
             </div>
           </div>
 
-          <button onClick={handlePlaceOrder} className="mt-6 w-full bg-transparent border border-black text-black py-5 text-xl rounded-lg font-semibold hover:bg-golden hover:border-golden hover:text-white transition duration-300">
+          <button onClick={handlePlaceOrder} className="mt-6 w-full bg-transparent border border-black text-black py-5 text-xl rounded-lg font-semibold  hover:bg-golden hover:border-golden hover:text-white transition-colors duration-1000">
             Place Order
           </button>
         </div>
         </div>
     </div>
+          {/* Success Message */}
+      {/* Success Message */}
+      {successMessage && (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <div className="bg-green-500 text-white p-6 rounded-lg shadow-lg relative">
+            <button
+              onClick={handleCloseSuccessMessage}
+              className="absolute top-2 right-2 bg-white text-green-500 p-1 rounded-full hover:bg-gray-200"
+            >
+              &times;
+            </button>
+            <p>{successMessage}</p>
+          </div>
+        </div>
+      )}
 
     <div className='w-full h-auto mt-16'>
                 <img src={imgFrame} alt='frame' className='w-full h-full' />

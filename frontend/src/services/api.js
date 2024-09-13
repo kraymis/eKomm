@@ -156,6 +156,8 @@ export const placeOrder = async (orderData) => {
         'Authorization': `Bearer ${getAuthToken()}` // Include token in headers
       }
     });
+    await clearCart();
+
 
     return response.data; // Return the response data for further processing
   } catch (error) {
@@ -164,6 +166,18 @@ export const placeOrder = async (orderData) => {
   }
 };
 
+const clearCart = async () => {
+  try {
+    await axios.delete(`${API_URL}/cart/`, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}` // Include token in headers
+      }
+    });
+  } catch (error) {
+    console.error('Error clearing cart:', error);
+    throw error; // Propagate the error to handle it in the calling function
+  }
+};
 // Function to get the authenticated user's details
 export const fetchAuthenticatedUser = async (token) => {
   try {

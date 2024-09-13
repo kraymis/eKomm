@@ -118,12 +118,31 @@ const getCartItemCount = asyncHandler(async (req, res) => {
   }
 
   // Calculate total number of items in the cart
-  const itemCount = cart.cartItems.reduce((total, item) => total + item.quantity, 0);
+  const itemCount = cart.cartItems.length;
 
   res.json({ count: itemCount });
 });
 
+const clearCart = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const cart = await Cart.findOne({ user: userId });
+  if (!cart) {
+    return res.status(404).json({ message: 'Cart not found' });
+  }
+
+  // Clear all cart items
+  cart.cartItems = [];
+  cart.total = 0;
+
+  await cart.save();
+
+  res.json({ message: 'Cart cleared successfully' });
+});
+
+
 module.exports = {
+  clearCart,
   getCartItemCount,
   addToCart,
   getCart,

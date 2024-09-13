@@ -8,11 +8,15 @@ import living3 from '../assets/living (3).png';
 import image1 from '../assets/image 1.png';
 import Footer from '../components/Footer';
 import { getLatestProducts } from '../services/api'; // Import the API function
+import { useNavigate } from 'react-router-dom';
+
 
 function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();  // Initialize useNavigate
+
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -101,7 +105,7 @@ function Home() {
             ))
           )}
         </div>
-        <button className='mt-4 hover:bg-[#B88E2F] border-2 border-[#B88E2F] hover:text-white px-10 py-4 font-medium w-[20vw] transition-colors duration-300 hover:border-0 bg-white text-[#B88E2F]'>
+        <button onClick={() => navigate('/shop')} className='mt-4 hover:bg-[#B88E2F] border-2 border-[#B88E2F] hover:text-white px-10 py-4 font-medium w-[20vw] transform duration-300 hover:border-0 bg-white text-[#B88E2F]'>
         Show more
         </button>
         

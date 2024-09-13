@@ -198,9 +198,7 @@ function Shop() {
       <div className='w-full h-auto mt-16'>
         <img src={imgFrame} alt='frame' className='w-full h-full' />
       </div>
-      <div className='w-full h-auto mt-16'>
-      <img src="https://images.pexels.com/photos/2582734/pexels-photo-2582734.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" alt="Test Image" />
-      </div>
+
 
       <Footer />
     </div>

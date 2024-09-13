@@ -1,4 +1,5 @@
 import React , {useState, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import imgShop from "../assets/shop.png"
 import { FaTrash } from 'react-icons/fa'; // Assuming you want a trash icon
@@ -6,6 +7,7 @@ import imageSofa from '../assets/living (1).png';
 import imgFrame from '../assets/frame.png';
 import Footer from '../components/Footer';
 import { fetchCart, updateCartItemQuantity, deleteCartItem } from '../services/api'; // Import your API functions
+import { isAuthenticated } from '../utils/auth'; // Import your auth functions
 
 
 
@@ -14,6 +16,16 @@ const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();  // Initialize useNavigate
+
+
+    useEffect(() => {
+        // If user is authenticated, redirect to home
+        if (!isAuthenticated()) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
 
     // Fetch cart items when the component mounts
     useEffect(() => {
@@ -132,7 +144,7 @@ const CartPage = () => {
                         <span>Total</span>
                         <span>Rs. {calculateTotal().toLocaleString()}</span>
                     </div>
-                    <button className="mt-auto border-2 border-black px-8 py-2 rounded-lg font-semibold">
+                    <button onClick={() => navigate('/checkout')} className="mt-auto border-2 border-black px-8 py-2 rounded-lg font-semibold hover:border-golden hover:bg-golden hover:text-white">
                         Check Out
                     </button>
                 </div>
