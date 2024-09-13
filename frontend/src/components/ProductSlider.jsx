@@ -27,9 +27,9 @@ const ProductSlider = ({products}) => {
         className="mySwiper"
       >
         {products.map((product) => (
-          <SwiperSlide key={product.id} className='p-4'>
+          <SwiperSlide key={product._id} className='p-4'>
             <ShopCard
-              key={product.id}
+              key={product._id}
               id={product._id} // Pass product ID
               image={product.images[0]}
               name={product.name}

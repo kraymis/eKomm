@@ -32,7 +32,6 @@ function Shop() {
         setCategories(['all', ...categories]); // Add 'all' option to the categories
       };
       fetchData();
-      console.log("run first")
     }, []);
 
     // Read category filter from URL
@@ -42,15 +41,12 @@ function Shop() {
       if (categoryFromQuery) {
         setFilterCategory(categoryFromQuery);
       }
-      console.log("run second")
     }, [location.search]);
 
     // Update filtered and sorted products
     useEffect(() => {
       const updateFilteredProducts = async () => {
         let products = await getAllProducts();
-        // console.log(products)
-        console.log("running here");
 
         // Filter by search term
         if (searchTerm) {
@@ -90,7 +86,6 @@ function Shop() {
 
       const fetchAndSetProducts = async () => {
         const products = await updateFilteredProducts();
-        console.log(products);
         setFilteredProducts(products);
         
         const indexOfLastProduct = currentPage * productsPerPage;
@@ -98,8 +93,6 @@ function Shop() {
         const currentProducts2 = products.slice(indexOfFirstProduct, indexOfLastProduct);
         setCurrentProducts(currentProducts2);
         
-        console.log("run third");
-        console.log(filterCategory);
       };
 
       fetchAndSetProducts();
@@ -179,7 +172,7 @@ function Shop() {
         {currentProducts.map(product => (
           <ShopCard
             id={product._id} // Pass product ID
-            key={product.id} 
+            key={product._id} 
             name={product.name} 
             price={product.price}
             description={product.description}

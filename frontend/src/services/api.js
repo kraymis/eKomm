@@ -62,7 +62,6 @@ export const getAllProducts = async () => {
 
   export const getProductDetails = async (id) => {
     try {
-      console.log('Fetching product details...',id);
       const response = await axios.get(`${API_URL}/products/${id}`);
       return response.data;
     } catch (error) {
@@ -79,5 +78,30 @@ export const getRelatedProductsByCategory = async (categoryId) => {
   } catch (error) {
     console.error('Error fetching related products:', error);
     throw error; // Rethrow to handle it in the component
+  }
+};
+
+export const addToCart = async (productId, quantity) => {
+  try {
+    const token = localStorage.getItem('token'); // Get token from localStorage
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    // Make the POST request to add the product to the cart
+    const response = await axios.post(
+      `${API_URL}/cart/add`,
+      { productId, quantity }, // Payload with product ID and quantity
+      config
+    );
+
+    console.log('Product added to cart', response.data);
+    return response.data; // Return the response to handle it in the component
+  } catch (error) {
+    console.error('Error adding to cart', error.response?.data || error.message);
+    throw error.response?.data || error.message; // Throw error to handle it in the component
   }
 };

@@ -4,27 +4,25 @@ import img2 from "../assets/image 2.png";
 import img3 from "../assets/image 3.png";
 import img4 from "../assets/image 4.png";
 import img5 from "../assets/image 5.png";
+import { addToCart } from '../services/api';
+
 
 const ProductDetails = ({product}) => {
   const [mainImage, setMainImage] = useState(product.images[0]);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
-
   const images = product.images;
 
   // setMainImage(product.images[0]);
 
-  const handleAddToCart = () => {
-    const productDetails = {
-      name: "Product Name",
-      rating: 4.5,
-      size: selectedSize,
-      color: selectedColor,
-      quantity,
-    };
-    console.log(productDetails);
-    // You can send this object to your backend or cart functionality
+  const handleAddToCart = async () => {
+    try {
+      const data = await addToCart(product._id,quantity); // Pass product ID and optional quantity
+      console.log('Cart updated:', data);
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+    }
   };
 
   if (!product) {
@@ -37,9 +35,9 @@ const ProductDetails = ({product}) => {
       <div className="flex w-[45%] max-h-[75vh] h-full justify-center gap-8 ">
         <div className="flex flex-col items-center justify-center gap-4 overflow-y-auto w-[20%]">
           {images.map((img, index) => (
-            <div className="relative h-1/6 w-[80%] overflow-hidden">
+            <div key={index} className="relative h-1/6 w-[80%] overflow-hidden">
               <img
-                key={index}
+                
                 src={img}
                 alt={`Thumbnail ${index + 1}`}
                 onClick={() => setMainImage(img)}

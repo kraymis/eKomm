@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addToCart } from '../services/api';
+
 
 const ShopCard = ({ image, name, description, price,category,id }) => {
     const navigate = useNavigate(); // Initialize useNavigate
@@ -8,14 +10,19 @@ const ShopCard = ({ image, name, description, price,category,id }) => {
     const handleNavigation = () => {
       navigate(`/product/${id}`);
     };
-    // console.log(images)
-    // console.log(name)
+    const handleAddToCart = async () => {
+        try {
+          const data = await addToCart(id,1); // Pass product ID and optional quantity
+          console.log('Cart updated:', data);
+        } catch (error) {
+          console.error('Error adding product to cart:', error);
+        }
+      };
     return (
-        <div 
-        onClick={handleNavigation} // Add onClick event to handle navigation
+        <div // Add onClick event to handle navigation
         className='flex flex-col h-[50vh] rounded-md cursor-pointer bg-[#F4F5F7] w-[18vw] flex-shrink-0 transition-transform duration-300 transform hover:scale-105'>
             
-            <div className='h-[55%] w-full overflow-hidden rounded-t-md'>
+            <div onClick={handleNavigation} className='h-[55%] w-full overflow-hidden rounded-t-md'>
                 <img 
                     src={image} 
                     alt={name} 
@@ -23,14 +30,14 @@ const ShopCard = ({ image, name, description, price,category,id }) => {
                 />
             </div>
             
-            <div className='h-[30%] flex flex-col p-4 gap-2'>
+            <div onClick={handleNavigation} className='h-[30%] flex flex-col p-4 gap-2'>
                 <h4 className='font-semibold text-lg'>{name}</h4>
                 <p className='text-sm'>{description}</p>
                 <p className='font-semibold text-lg'>${price}</p>
             </div>
             
             <div className='h-[15%] flex justify-center items-end'>
-                <button className='bg-[#B88E2F] transition-colors duration-300 hover:bg-white hover:text-[#B88E2F] hover:border-[#B88E2F] hover:border-2 text-white px-4 py-3 rounded w-full'>Add to cart</button>
+                <button onClick={handleAddToCart} className='bg-[#B88E2F] transition-colors duration-300 hover:bg-white hover:text-[#B88E2F] hover:border-[#B88E2F] hover:border-2 text-white px-4 py-3 rounded w-full'>Add to cart</button>
             </div>
         </div>
     );

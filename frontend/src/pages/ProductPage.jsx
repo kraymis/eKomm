@@ -21,7 +21,6 @@ const ProductPage = () => {
             try {
                 const data = await getProductDetails(id);  // Fetch product details
                 setProduct(data);
-                console.log('Product:', data);
                 const relatedProductsData = await getRelatedProductsByCategory(data.category);
                 setRelatedProducts(relatedProductsData);
             } catch (err) {
