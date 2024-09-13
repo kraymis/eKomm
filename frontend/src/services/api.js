@@ -146,3 +146,50 @@ export const deleteCartItem = async (itemId) => {
         throw error;
     }
 };
+
+
+// Function to place an order
+export const placeOrder = async (orderData) => {
+  try {
+    const response = await axios.post(`${API_URL}/orders/`, orderData, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}` // Include token in headers
+      }
+    });
+
+    return response.data; // Return the response data for further processing
+  } catch (error) {
+    console.error('Error placing order:', error);
+    throw error; // Propagate the error to handle it in the calling function
+  }
+};
+
+// Function to get the authenticated user's details
+export const fetchAuthenticatedUser = async (token) => {
+  try {
+    const response = await axios.get(`${API_URL}/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching authenticated user:', error);
+    throw error;
+  }
+};
+
+// Function to fetch the cart item count for a user
+export const fetchCartItemCount = async (token) => {
+  try {
+    const response = await axios.get(`${API_URL}/cart/items-count`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.count; // Assuming your API returns an object with a 'count' property
+  } catch (error) {
+    console.error('Error fetching cart item count:', error);
+    throw error;
+  }
+};

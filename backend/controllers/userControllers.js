@@ -55,15 +55,19 @@ const loginUser = async (req, res) => {
       }
 
   };
-const getMe = async (req, res) => {
-    const {_id,name,email}= await User.findById(req.user.id)
-    res.status(200).json({
-        id:_id,
-        username,
-        email,
-    })
-    // res.json({message:"Data user display"})
-}
+
+const getAuthenticatedUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password'); // Exclude password from the response
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 
 
@@ -75,6 +79,6 @@ const generateToken = (id)=>{
 module.exports = {
   registerUser,
   loginUser,
-  getMe,
+  getAuthenticatedUser,
   
 };

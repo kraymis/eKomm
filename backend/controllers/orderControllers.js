@@ -1,37 +1,50 @@
-const Order = require('../models/Order');
-const asyncHandler = require('express-async-handler');
+const Order = require('../models/Order'); // Adjust the path to your Order model
 
+// Place Order Function
+exports.placeOrder = async (req, res) => {
+  try {
+    const userId = req.user.id; // Extract user ID from the token
 
-// Create a new order
-const createOrder = asyncHandler(async (req, res) => {
-  const { items, total } = req.body;
+    const {
+      cartItems,
+      total,
+      paymentMethod,
+      firstName,
+      lastName,
+      company,
+      country,
+      streetAddress,
+      city,
+      province,
+      zipCode,
+      phone,
+      email,
+      additionalInfo
+    } = req.body;
 
-  const order = await Order.create({
-    user: req.user._id,
-    items,
-    total,
-    status: 'pending',
-  });
+    // Create a new order
+    const newOrder = new Order({
+      user: userId,
+      cartItems,
+      total,
+      paymentMethod,
+      firstName,
+      lastName,
+      company,
+      country,
+      streetAddress,
+      city,
+      province,
+      zipCode,
+      phone,
+      email,
+      additionalInfo
+    });
 
-  res.status(201).json(order);
-});
-const getOrdersByUser = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
-
-  if (orders) {
-    res.status(200).json(orders);
-  } else {
-    res.status(404).json({ message: 'No orders found for this user' });
+    await newOrder.save();
+    res.status(201).json(newOrder); // Respond with the created order
+  } catch (error) {
+    console.error('Error placing order:', error);
+    res.status(500).json({ message: 'Server error' });
   }
-});
-// Get user's orders
-const getOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ user: req.user._id });
-  res.json(orders);
-});
-
-module.exports = {
-  createOrder,
-  getOrders,
-  getOrdersByUser
 };

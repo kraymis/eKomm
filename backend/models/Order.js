@@ -10,7 +10,8 @@ const productSchema = new Schema({
   },
   name: String,
   price: Number,
-  quantity: Number
+  quantity: Number,
+  image:String
 });
 
 // Define Order schema

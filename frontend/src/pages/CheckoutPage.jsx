@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import imgShop from "../assets/shop.png"
-import imageSofa from '../assets/living (1).png';
 import imgFrame from '../assets/frame.png';
 import Footer from '../components/Footer';
+import { placeOrder,fetchCart } from '../services/api'; // Import the function
 
 
 const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState('Cash On Delivery');
-
-  const handlePaymentChange = (event) => {
-    setPaymentMethod(event.target.value);
-  };
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
+  const [total,setTotal] = useState(0);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -28,72 +27,59 @@ const CheckoutPage = () => {
     cartItems: [],
   });
 
+  useEffect(() => {
+    const loadCart = async () => {
+        try {
+            const data = await fetchCart();
+            setCartItems(data.cartItems); // Adjust based on actual API response structure
+            setTotal(data.total);
+            setLoading(false);
+        } catch (err) {
+            setError('Failed to fetch cart items');
+            setLoading(false);
+        }
+    };
+
+    loadCart();
+}, []);
+
+  const handlePaymentChange = (event) => {
+    setPaymentMethod(event.target.value);
+  };
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-      cartItems: cartItems,
     }));
   };
 
-  const cartItems = [
-    {
-      id: 1,
-      name: 'Asgaard Sofa',
-      image: imageSofa,  // Replace with a real image URL
-      price: 250000,
-      quantity: 1,
-    },
-    {
-      id: 2,
-      name: 'Nordic Chair',
-      image: imageSofa,  // Replace with a real image URL
-      price: 50000,
-      quantity: 10,
-    },
-    {
-      id: 3,
-      name: 'Karmousa',
-      image: imageSofa,  // Replace with a real image URL
-      price: 100000,
-      quantity: 5,
-    },
-  ];
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
-    // Step 2: Function to handle form submission
+ 
+    const totalPrice = total;
+      
     const handlePlaceOrder = async () => {
-        const orderData = {
-          cartItems,
-          totalPrice,
-          paymentMethod,
-          ...formData, // Include billing details
-        };
-    
-        // Send data to backend (adjust the URL to match your backend endpoint)
-        try {
-          const response = await fetch('/api/orders', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(orderData),
-          });
-    
-          if (response.ok) {
-            // Handle success (e.g., redirect to success page)
-            console.log('Order placed successfully!');
-          } else {
-            console.error('Order placement failed');
-          }
-        } catch (error) {
-          console.error('Error:', error);
-        }
+      // const token = localStorage.getItem('token'); // Get token from local storage or context
+      const orderData = {
+        cartItems,
+        total,
+        ...formData,
       };
-     const handleGG = () => {
-        console.log(formData);
-     }
+
+      try {
+        await placeOrder(orderData);
+        console.log('Order placed successfully!');
+        // Optionally, redirect or show a success message
+      } catch (error) {
+        console.error('Error placing order:', error);
+        // Optionally, show an error message
+      }
+      console.log(orderData);
+    };
+
+
+
 
 
 return (
@@ -213,7 +199,7 @@ return (
                             name="phone" // Ensure the name attribute matches formData key
                             className="w-full border border-gray-300 rounded-xl p-5"
                             placeholder="Phone"
-                            value={formData.zipCode}
+                            value={formData.phone}
                             onChange={handleInputChange}
                         />
                     </div>
@@ -248,7 +234,7 @@ return (
 
           {/* Loop through cart items */}
           {cartItems.map((item) => (
-            <div key={item.id} className="mb-6">
+            <div key={item._id} className="mb-6">
               <div className="flex justify-between">
                 <span>{item.name}</span>
                 <span>Rs. {item.price.toLocaleString()}</span>
@@ -301,7 +287,7 @@ return (
             </div>
           </div>
 
-          <button onClick={handleGG} className="mt-6 w-full bg-transparent border border-black text-black py-5 text-xl rounded-lg font-semibold hover:bg-golden hover:border-golden hover:text-white transition duration-300">
+          <button onClick={handlePlaceOrder} className="mt-6 w-full bg-transparent border border-black text-black py-5 text-xl rounded-lg font-semibold hover:bg-golden hover:border-golden hover:text-white transition duration-300">
             Place Order
           </button>
         </div>

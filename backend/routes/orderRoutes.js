@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { createOrder, getOrdersByUser } = require('../controllers/orderControllers');
+const { placeOrder } = require('../controllers/orderControllers'); // Adjust the path to your controller
 const protect = require('../middleware/authMiddleware');
 
-// Create a new order (protected route)
-router.post('/', protect, createOrder);
-
-// Get all orders for the user (protected route)
-router.get('/', protect, getOrdersByUser);
+// Place Order Route
+router.post('/', protect, placeOrder);
 
 module.exports = router;
