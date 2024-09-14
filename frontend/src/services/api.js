@@ -207,3 +207,67 @@ export const fetchCartItemCount = async (token) => {
     throw error;
   }
 };
+
+// Products API Calls
+
+// Add a product
+export const addProduct = async (product) => {
+  try {
+    const response = await axios.post(`${API_URL}/products`, product);
+    console.log('Product added:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error adding product:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};
+
+// Delete a product
+export const deleteProduct = async (id) => {
+  try {
+    const response = await axios.delete(`${API_URL}/products/${id}`);
+    console.log('Product deleted:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting product:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};
+
+// Update a product
+export const updateProduct = async (id, product) => {
+  try {
+    const response = await axios.put(`${API_URL}/products/${id}`, product);
+    console.log('Product updated:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating product:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};
+
+// Orders API Calls
+
+// Get all orders
+export const getOrders = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/orders/all`);
+    console.log('Fetched Orders:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching orders:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};
+
+// Update order status
+export const updateOrderStatus = async (id, status) => {
+  try {
+    const response = await axios.put(`${API_URL}/orders/${id}/status`, { status });
+    console.log('Order status updated:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating order status:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};

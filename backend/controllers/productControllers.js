@@ -89,10 +89,54 @@ const deleteProductById = asyncHandler(async (req, res) => {
   }
 });
 
+// Update product by ID
+const updateProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    description,
+    price,
+    images,
+    availableSizes,
+    availableColors,
+    stockQuantity,
+    category
+  } = req.body;
+
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        name,
+        description,
+        price,
+        images,
+        availableSizes,
+        availableColors,
+        stockQuantity,
+        category
+      },
+      { new: true }
+    ); // Find product by ID and update
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
 
 
 
 module.exports = {
+  updateProduct,
   deleteProductById,
   deleteAllProducts,
   getLatestProducts,

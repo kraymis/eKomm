@@ -34,7 +34,12 @@ const orderSchema = new Schema({
   additionalInfo: { type: String },
   cartItems: [productSchema],  // List of products in the order
   total: { type: Number, required: true },  // Total price for the order
-  orderDate: { type: Date, default: Date.now }
+  orderDate: { type: Date, default: Date.now },
+  status: {  // New status field
+    type: String,
+    enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+    default: 'Pending'
+  }
 });
 
 module.exports = mongoose.model('Order', orderSchema);

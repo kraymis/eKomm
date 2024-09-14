@@ -50,25 +50,6 @@ exports.placeOrder = async (req, res) => {
 };
 
 
-// Get Orders Function
-exports.getOrders = async (req, res) => {
-  try {
-    const userId = req.user.id; // Extract user ID from the token
-    console.log(userId);
-
-    // Fetch all orders for the user
-    const orders = await Order.find({ user: userId }).sort({ createdAt: -1 }); // Sort by most recent first
-
-    if (!orders) {
-      return res.status(404).json({ message: 'No orders found' });
-    }
-
-    res.status(200).json(orders); // Respond with the user's orders
-  } catch (error) {
-    console.error('Error fetching orders:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
 
 
 // Get All Orders (for all users)
@@ -84,6 +65,29 @@ exports.getAllOrders = async (req, res) => {
     res.status(200).json(allOrders); // Respond with all orders
   } catch (error) {
     console.error('Error fetching all orders:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Update order status
+exports.updateOrderStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    ); // Find order by ID and update status
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error('Error updating order status:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
