@@ -69,3 +69,21 @@ exports.getOrders = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+// Get All Orders (for all users)
+exports.getAllOrders = async (req, res) => {
+  try {
+    // Fetch all orders in the system
+    const allOrders = await Order.find().sort({ createdAt: -1 }); // Sort by most recent first
+
+    if (!allOrders || allOrders.length === 0) {
+      return res.status(404).json({ message: 'No orders found' });
+    }
+
+    res.status(200).json(allOrders); // Respond with all orders
+  } catch (error) {
+    console.error('Error fetching all orders:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
