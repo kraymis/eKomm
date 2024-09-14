@@ -5,6 +5,7 @@ const Admin = () => {
   const [view, setView] = useState('products'); // Switch between 'products' and 'orders'
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [productToEdit, setProductToEdit] = useState(null); // State for the product being edited
   const [showAddProductForm, setShowAddProductForm] = useState(false); // State for showing/hiding the add product form
   
   useEffect(() => {
@@ -39,7 +40,13 @@ const Admin = () => {
   const handleUpdateProduct = async (id, updatedProduct) => {
     const updated = await updateProduct(id, updatedProduct);
     setProducts(products.map((product) => product._id === id ? updated : product));
+    setShowAddProductForm(false); // Close the form after updating the product
   };
+  const handleUpdateProductClick = (product) => {
+    setProductToEdit(product); // Set the product for editing
+    setShowAddProductForm(true); // Show the form
+  };
+  
 
   const handleUpdateOrderStatus = async (id, status) => {
     const updatedOrder = await updateOrderStatus(id, status);
@@ -65,7 +72,7 @@ const Admin = () => {
             products={products}
             onAddProduct={() => setShowAddProductForm(true)} // Show form when 'Add Product' is clicked
             onDeleteProduct={handleDeleteProduct}
-            onUpdateProduct={handleUpdateProduct}
+            onUpdateProductClick={handleUpdateProductClick}
           />
         )}
 
@@ -80,15 +87,27 @@ const Admin = () => {
       {/* Add Product Modal */}
       {showAddProductForm && (
         <AddProductForm 
-          onClose={() => setShowAddProductForm(false)} 
-          onConfirm={handleAddProduct} 
+          onClose={() => {
+            setShowAddProductForm(false);
+            setProductToEdit(null); // Clear product to edit
+          }} 
+
+          onConfirm={(product) => {
+            if (productToEdit) {
+              handleUpdateProduct(productToEdit._id, product); // Update product
+            } else {
+              handleAddProduct(product); // Add new product
+            }
+            setProductToEdit(null); // Clear product to edit
+          }} 
+          productToEdit={productToEdit} // Pass product to edit
         />
       )}
     </div>
   );
 };
 
-const ProductsSection = ({ products, onAddProduct, onDeleteProduct, onUpdateProduct }) => {
+const ProductsSection = ({ products, onAddProduct, onDeleteProduct, onUpdateProductClick }) => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Products</h2>
@@ -104,12 +123,13 @@ const ProductsSection = ({ products, onAddProduct, onDeleteProduct, onUpdateProd
           <p>Price: ${product.price}</p>
           <p>Category: {product.category}</p>
           <button onClick={() => onDeleteProduct(product._id)} className="bg-red-500 text-white px-2 py-1 rounded mr-2">Delete</button>
-          <button onClick={() => onUpdateProduct(product._id, { name: 'Updated Product', price: 200 })} className="bg-green-500 text-white px-2 py-1 rounded">Update</button>
+          <button onClick={() => onUpdateProductClick(product)} className="bg-green-500 text-white px-2 py-1 rounded">Update</button>
         </div>
       ))}
     </div>
   );
 };
+
 
 const OrdersSection = ({ orders, onUpdateOrderStatus }) => {
   return (
@@ -131,7 +151,7 @@ const OrdersSection = ({ orders, onUpdateOrderStatus }) => {
   );
 };
 
-const AddProductForm = ({ onClose, onConfirm }) => {
+const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
   const [product, setProduct] = useState({
     name: '',
     description: '',
@@ -143,9 +163,27 @@ const AddProductForm = ({ onClose, onConfirm }) => {
     category: '',
   });
 
+  useEffect(() => {
+    if (productToEdit) {
+      setProduct(productToEdit);
+    } else {
+      setProduct({
+        name: '',
+        description: '',
+        price: '',
+        images: [],
+        availableSizes: [],
+        availableColors: [],
+        stockQuantity: '',
+        category: '',
+      });
+    }
+  }, [productToEdit]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
+    console.log(product)
   };
 
   const handleConfirm = () => {
@@ -155,7 +193,7 @@ const AddProductForm = ({ onClose, onConfirm }) => {
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
       <div className="bg-white p-10 rounded-lg shadow-lg max-w-lg w-full h-[90vh] overflow-auto">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Add New Product</h2>
+        <h2 className="text-2xl font-bold mb-4">{productToEdit ? 'Update Product' : 'Add New Product'}</h2>
 
         <div className="mb-4">
           <label className="block text-lg font-semibold mb-2 text-gray-700">Name</label>
@@ -199,18 +237,6 @@ const AddProductForm = ({ onClose, onConfirm }) => {
             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B88E2F] transition"
           />
         </div>
-
-        <div className="mb-4">
-          <label className="block text-lg font-semibold mb-2 text-gray-700">Category</label>
-          <input
-            type="text"
-            name="category"
-            value={product.category}
-            onChange={handleChange}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B88E2F] transition"
-          />
-        </div>
-
         <div className="mb-4">
           <label className="block text-lg font-semibold mb-2 text-gray-700">Available Sizes (comma-separated)</label>
           <input
@@ -293,6 +319,19 @@ const AddProductForm = ({ onClose, onConfirm }) => {
           </button>
         </div>
 
+        <div className="mb-4">
+          <label className="block text-lg font-semibold mb-2 text-gray-700">Category</label>
+          <input
+            type="text"
+            name="category"
+            value={product.category}
+            onChange={handleChange}
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B88E2F] transition"
+          />
+        </div>
+
+
+
         {/* Buttons */}
         <div className="flex justify-between mt-6">
           <button
@@ -301,11 +340,11 @@ const AddProductForm = ({ onClose, onConfirm }) => {
           >
             Cancel
           </button>
-          <button
-            onClick={handleConfirm}
-            className="bg-[#B88E2F] text-white px-6 py-3 rounded-lg hover:bg-[#9a771e] transition"
+          <button 
+            onClick={handleConfirm} 
+            className="bg-blue-500 text-white px-4 py-2 rounded"
           >
-            Confirm
+            {productToEdit ? 'Update' : 'Confirm'}
           </button>
         </div>
       </div>
