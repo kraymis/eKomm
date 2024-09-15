@@ -34,13 +34,14 @@ const CheckoutPage = () => {
     phone: '',
     email: '',
     additionalInfo: '',
-    cartItems: [],
+    cartItems:[],
   });
 
   useEffect(() => {
     const loadCart = async () => {
         try {
             const data = await fetchCart();
+            console.log(data);
             setCartItems(data.cartItems); // Adjust based on actual API response structure
             setTotal(data.total);
             setLoading(false);
@@ -72,9 +73,10 @@ const CheckoutPage = () => {
     const handlePlaceOrder = async () => {
       // const token = localStorage.getItem('token'); // Get token from local storage or context
       const orderData = {
+        ...formData,
         cartItems,
         total,
-        ...formData,
+        status: 'Pending',
       };
 
       try {

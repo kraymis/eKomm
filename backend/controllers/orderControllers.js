@@ -21,6 +21,7 @@ exports.placeOrder = async (req, res) => {
       email,
       additionalInfo
     } = req.body;
+    console.log(req.body);
 
     // Create a new order
     const newOrder = new Order({

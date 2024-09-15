@@ -151,6 +151,7 @@ export const deleteCartItem = async (itemId) => {
 // Function to place an order
 export const placeOrder = async (orderData) => {
   try {
+    console.log('Placing order:', orderData.cartItems);
     const response = await axios.post(`${API_URL}/orders/`, orderData, {
       headers: {
         'Authorization': `Bearer ${getAuthToken()}` // Include token in headers
