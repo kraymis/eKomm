@@ -70,6 +70,86 @@ const getAuthenticatedUser = async (req, res) => {
 };
 
 
+// Add a product to favorites
+const addToFavorites = async (req, res) => {
+  const { productId } = req.body; // Extract productId from the request body
+  const userId = req.user._id; // Extract userId from the token (req.user)
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  // Check if the product is already in the user's favorites
+  if (user.favorites.includes(productId)) {
+    return res.status(400).json({ message: 'Product already in favorites' });
+  }
+
+  // Add product to favorites and save
+  user.favorites.push(productId);
+  await user.save();
+
+  res.status(201).json({
+    message: 'Product added to favorites',
+    favorites: user.favorites
+  });
+};
+
+// Remove a product from favorites
+const removeFromFavorites = async (req, res) => {
+  const { productId } = req.body; // Extract productId from the request body
+  const userId = req.user._id; // Extract userId from the token (req.user)
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(404).json({ message: 'User not found' });
+  }
+
+  // Check if the product is in the user's favorites
+  if (!user.favorites.includes(productId)) {
+    return res.status(400).json({ message: 'Product not found in favorites' });
+  }
+
+  // Remove the product from favorites
+  user.favorites = user.favorites.filter(fav => fav.toString() !== productId);
+  await user.save();
+
+  res.status(200).json({
+    message: 'Product removed from favorites',
+    favorites: user.favorites
+  });
+};
+
+// Check if product is in favorites
+const isProductFavorite = async (req, res) => {
+  const userId = req.user._id;
+  const productId = req.params.productId;
+
+  const user = await User.findById(userId);
+
+  if (user) {
+    const isFavorite = user.favorites.some((fav) => fav.toString() === productId);
+    res.json({ isFavorite });
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
+};
+
+const getFavorites = async (req, res) => {
+  try {
+      const userId = req.user.id; // Extracted from token by authMiddleware
+      const user = await User.findById(userId).select('favorites'); // Adjust field name if needed
+      if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user.favorites); // Send the favorites list
+  } catch (error) {
+      console.error('Error fetching favorites:', error);
+      res.status(500).json({ message: 'Server error' });
+  }
+}
 
 const generateToken = (id)=>{
     return jwt.sign({id},process.env.JWT_SECRET,{
@@ -77,6 +157,10 @@ const generateToken = (id)=>{
     })
 }
 module.exports = {
+  getFavorites,
+  isProductFavorite,
+  addToFavorites,
+  removeFromFavorites,
   registerUser,
   loginUser,
   getAuthenticatedUser,

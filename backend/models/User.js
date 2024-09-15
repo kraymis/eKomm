@@ -37,6 +37,13 @@ const userSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Order'  // Reference to the Order model
     }
+  ],
+    // Add favorites field to store product IDs
+  favorites: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product'  // Reference to the Product model
+      }
   ]
 });
 

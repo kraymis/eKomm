@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { addToCart, getCart, updateCartItemQuantity, deleteCartItem,getCartItemCount, clearCart} = require('../controllers/cartControllers');
+const { addToCart, getCart, updateCartItemQuantity, deleteCartItem,getCartItemCount, clearCart,isProductInCart} = require('../controllers/cartControllers');
 const protect  = require('../middleware/authMiddleware'); // Middleware for checking the token
 
 // Add product to cart
@@ -18,6 +18,9 @@ router.delete('/:id', protect, deleteCartItem);
 router.delete('/', protect, clearCart);
 
 router.get('/items-count', protect, getCartItemCount);
+
+router.get('/contains/:productId', protect, isProductInCart); // New route to check if the product is in the cart
+
 
 
 module.exports = router;

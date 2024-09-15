@@ -1,46 +1,142 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { addToCart } from '../services/api';
+import { addToCart, deleteCartItem, addToFavorites, removeFromFavorites, isProductInCart, isProductFavorite,fetchCart } from '../services/api'; // Assuming you have API methods for checking cart/favorites
 
+const ShopCard = ({ image, name, description, price, category, id }) => {
+  const [isFavorite, setIsFavorite] = useState(false); // State to track favorite status
+  const [inCart, setInCart] = useState(false); // State to track cart status
+  const [cartItems, setCartItems] = useState([]); // State to store cart items  
+  const navigate = useNavigate();
 
-const ShopCard = ({ image, name, description, price,category,id }) => {
-    const navigate = useNavigate(); // Initialize useNavigate
-
-    // Function to handle navigation
-    const handleNavigation = () => {
-      navigate(`/product/${id}`);
+  // Fetch cart and favorite status when the component mounts
+  useEffect(() => {
+    const fetchStatus = async () => {
+      try {
+        const data = await fetchCart(); // Fetch cart items
+        setCartItems(data.cartItems);
+        console.log(cartItems);
+        const favoriteStatus = await isProductFavorite(id);
+        const cartStatus = await isProductInCart(id);
+        // console.log(favoriteStatus, cartStatus);
+        setIsFavorite(favoriteStatus);
+        setInCart(cartStatus);
+      } catch (error) {
+        console.error('Error fetching product status:', error);
+      }
     };
-    const handleAddToCart = async () => {
-        try {
-          const data = await addToCart(id,1); // Pass product ID and optional quantity
-          console.log('Cart updated:', data);
-        } catch (error) {
-          console.error('Error adding product to cart:', error);
+
+    fetchStatus();
+  }, [id]);
+
+  // Function to handle navigation to product details
+  const handleNavigation = () => {
+    navigate(`/product/${id}`);
+  };
+
+  // Function to handle adding or removing product from cart
+  const handleCartToggle = async () => {
+    try {
+        console.log(cartItems);
+        const itemInCart = cartItems.find(item => item.productId === id); // Find the item in the cart
+
+        if (inCart) {
+            await deleteCartItem(itemInCart._id); // Remove from cart using the item's ID
+            console.log('Item removed from cart');
+            setInCart(false);
+        } else {
+            await addToCart(id, 1); // Add to cart if not already in the cart
+            setInCart(true);
         }
-      };
-    return (
-        <div // Add onClick event to handle navigation
-        className='flex flex-col h-[50vh] rounded-md cursor-pointer bg-[#F4F5F7] w-[18vw] flex-shrink-0 transition-transform duration-300 transform hover:scale-105'>
-            
-            <div onClick={handleNavigation} className='h-[55%] w-full overflow-hidden rounded-t-md'>
-                <img 
-                    src={image} 
-                    alt={name} 
-                    className='w-full h-full object-cover rounded-t-md object-center' 
-                />
-            </div>
-            
-            <div onClick={handleNavigation} className='h-[30%] flex flex-col p-4 gap-2'>
-                <h4 className='font-semibold text-lg'>{name}</h4>
-                <p className='text-sm'>{description}</p>
-                <p className='font-semibold text-lg'>${price}</p>
-            </div>
-            
-            <div className='h-[15%] flex justify-center items-end'>
-                <button onClick={handleAddToCart} className='bg-[#B88E2F] transition-colors duration-300 hover:bg-white hover:text-[#B88E2F] hover:border-[#B88E2F] hover:border-2 text-white px-4 py-3 rounded w-full'>Add to cart</button>
-            </div>
-        </div>
-    );
+    } catch (error) {
+        console.error('Error updating cart:', error);
+    }
+};
+
+
+  // Function to toggle favorite status
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await removeFromFavorites(id); // Remove from favorites
+        setIsFavorite(false);
+      } else {
+        await addToFavorites(id); // Add to favorites
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error('Error updating favorites:', error);
+    }
+  };
+
+  return (
+    <div className='relative flex flex-col h-[50vh] rounded-md cursor-pointer bg-[#F4F5F7] w-[18vw] flex-shrink-0 transition-transform duration-300 transform hover:scale-105'>
+      
+      {/* Heart Icon for Adding/Removing Favorite */}
+      <div className='absolute top-2 right-2 z-10'>
+        <button onClick={toggleFavorite}>
+          {isFavorite ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="red"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="red"
+              className="w-6 h-6 transition-colors duration-200"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5.318 3.318a4.5 4.5 0 016.364 0L12 3.636l.318-.318a4.5 4.5 0 116.364 6.364L12 20.364l-6.682-6.682a4.5 4.5 0 010-6.364z"
+              />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="gray"
+              className="w-6 h-6 transition-colors duration-200 hover:stroke-red-500"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5.318 3.318a4.5 4.5 0 016.364 0L12 3.636l.318-.318a4.5 4.5 0 116.364 6.364L12 20.364l-6.682-6.682a4.5 4.5 0 010-6.364z"
+              />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Product Image */}
+      <div onClick={handleNavigation} className='h-[55%] w-full overflow-hidden rounded-t-md'>
+        <img 
+          src={image} 
+          alt={name} 
+          className='w-full h-full object-cover rounded-t-md object-center' 
+        />
+      </div>
+
+      {/* Product Details */}
+      <div onClick={handleNavigation} className='h-[30%] flex flex-col p-4 gap-2'>
+        <h4 className='font-semibold text-lg'>{name}</h4>
+        <p className='text-sm'>{description}</p>
+        <p className='font-semibold text-lg'>${price}</p>
+      </div>
+
+      {/* Add to Cart Button */}
+      <div className='h-[15%] flex justify-center items-end'>
+      <button
+        onClick={handleCartToggle}
+        className={`transition-colors duration-300 px-4 py-3 rounded w-full ${
+          inCart ? 'bg-gray-300 hover:bg-white text-gray-600 hover:border-gray-600 hover:border-2' : 'bg-[#B88E2F] text-white hover:bg-white hover:text-[#B88E2F] hover:border-2 hover:border-[#B88E2F]'
+        }`}
+      >
+        {inCart ? 'Remove from Cart' : 'Add to Cart'}
+      </button>
+      </div>
+    </div>
+  );
 };
 
 export default ShopCard;

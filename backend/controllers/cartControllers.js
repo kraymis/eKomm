@@ -140,8 +140,23 @@ const clearCart = asyncHandler(async (req, res) => {
   res.json({ message: 'Cart cleared successfully' });
 });
 
+// Check if product is in cart
+const isProductInCart = async (req, res) => {
+  const userId = req.user._id;
+  const productId = req.params.productId;
+
+  const cart = await Cart.findOne({ user: userId });
+
+  if (cart) {
+    const itemExists = cart.cartItems.some((item) => item.productId.toString() === productId);
+    res.json({ inCart: itemExists });
+  } else {
+    res.json({ inCart: false });
+  }
+};
 
 module.exports = {
+  isProductInCart,
   clearCart,
   getCartItemCount,
   addToCart,

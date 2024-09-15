@@ -139,6 +139,7 @@ export const updateCartItemQuantity = async (itemId, quantity) => {
 
 export const deleteCartItem = async (itemId) => {
     try {
+        console.log('Deleting item:', itemId);
         const response = await api.delete(`/cart/${itemId}`);
         return response.data;
     } catch (error) {
@@ -270,5 +271,92 @@ export const updateOrderStatus = async (id, status) => {
   } catch (error) {
     console.error('Error updating order status:', error.response?.data || error.message);
     throw error.response?.data || error.message;
+  }
+};
+
+
+// Add to favorites
+export const addToFavorites = async (productId) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    };
+
+    const response = await axios.post(`${API_URL}/users/favorites/add`, { productId }, config);
+    console.log('Product added to favorites:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error adding product to favorites:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};
+
+// Remove from favorites
+export const removeFromFavorites = async (productId) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    };
+
+    const response = await axios.post(`${API_URL}/users/favorites/remove`, { productId }, config);
+    console.log('Product removed from favorites:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error removing product from favorites:', error.response?.data || error.message);
+    throw error.response?.data || error.message;
+  }
+};
+
+
+export const isProductInCart = async (productId) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    };
+
+    // Make GET request to check if the product is in the cart
+    const response = await axios.get(`${API_URL}/cart/contains/${productId}`, config);
+    return response.data.inCart; // Server will return true/false
+  } catch (error) {
+    console.error('Error checking if product is in cart:', error);
+    throw error;
+  }
+};
+
+export const isProductFavorite = async (productId) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    };
+
+    const response = await axios.get(`${API_URL}/users/contains/${productId}`, config);
+    return response.data.isFavorite;
+  } catch (error) {
+    console.error('Error checking if product is favorite:', error);
+    throw error;
+  }
+};
+
+export const fetchFavorites = async () => {
+  try {
+      const token = localStorage.getItem('token'); // Adjust based on how you store the token
+      const response = await axios.get(`${API_URL}/users/favorites`, {
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          }
+      });
+      return response.data; // Assuming the backend returns the favorites in response.data
+  } catch (error) {
+      console.error('Error fetching favorites:', error);
+      throw error; // Propagate the error to handle it in the calling component
   }
 };

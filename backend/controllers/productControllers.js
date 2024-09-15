@@ -38,9 +38,7 @@ const getLatestProducts = asyncHandler(async (req, res) => {
 
 const getAllCategories = async (req, res) => {
   try {
-    console.log('Fetching categories...');
     const categories = await Product.distinct('category');
-    console.log('Categories:', categories);
     res.json(categories);
 
   } catch (error) {
