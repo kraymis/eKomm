@@ -8,6 +8,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Admin from './pages/Admin';
+import FavouritePage from './pages/FavouritePage';
 // import Contact from './components/Contact';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/admin' element={<Admin />} />
+        <Route path='/favourite' element={<FavouritePage />} />
         {/* <Route path='/contact' element={<Contact />} /> */}
       </Routes>
     </Router>
