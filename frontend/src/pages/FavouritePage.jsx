@@ -62,7 +62,7 @@ const FavouritePage = () => {
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4'>
                     {favorites.length > 0 ? (
                         favorites.map((item) => (
-                            <div key={item.id} className='relative flex flex-col h-[50vh] rounded-md cursor-pointer bg-[#F4F5F7] w-full flex-shrink-0 transition-transform duration-300 transform hover:scale-105'>
+                            <div key={item.id} className='relative flex flex-col h-[50vh] w-[20vw] rounded-md cursor-pointer bg-[#F4F5F7] flex-shrink-0 transition-transform duration-300 transform hover:scale-105'>
                                 <div className='absolute top-2 right-2 z-10'>
                                     <button onClick={() => handleRemoveFavorite(item.id)} className='text-red-500'>
                                         <FaTrash />
