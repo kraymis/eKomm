@@ -33,6 +33,10 @@ function Home() {
     fetchProducts();
   
   }, []);
+
+  const handleShowMore = (e) => {
+    navigate(`/shop?category=${e}`); // Navigate with category filter
+  };
   
 
 
@@ -58,21 +62,21 @@ function Home() {
           <h5 className='text-[#333] font-bold text-2xl'>Browse the range</h5>
           <p className='text-[#666666] font-light text-base'>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
           <div className='flex justify-center items-center mt-4 gap-8'>
-            <div className='flex flex-col items-center gap-4 font-semibold text-lg p-2 duration-300 transform hover:scale-105'>
+            <div onClick={()=>{handleShowMore("Dining")}} className='flex flex-col items-center gap-4 font-semibold text-lg p-2 duration-300 transform hover:scale-105 cursor-pointer'>
               <div>
                 <img src={living1} alt='living1' />
               </div>
               <p className='text-[#333] tracking-wide'>Dining</p>
 
             </div>
-            <div className='flex flex-col items-center gap-4 font-semibold text-lg p-2 duration-300 transform hover:scale-105'>
+            <div onClick={()=>{handleShowMore("Living")}} className='flex flex-col items-center gap-4 font-semibold text-lg p-2 duration-300 transform hover:scale-105 cursor-pointer'>
               <div>
                 <img src={living2} alt='living2' />
               </div>
               <p className='text-[#333] tracking-wide'>Living</p>
 
             </div>
-            <div className='flex flex-col items-center gap-4 font-semibold text-lg p-2 duration-300 transform hover:scale-105'>
+            <div onClick={()=>{handleShowMore("Bedroom")}} className='flex flex-col items-center gap-4 font-semibold text-lg p-2 duration-300 transform hover:scale-105 cursor-pointer'>
               <div>
                 <img src={living3} alt='living3' />
               </div>

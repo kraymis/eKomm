@@ -7,6 +7,8 @@ import imgSofa from '../assets/sofa.png';
 import ProductSlider from '../components/ProductSlider';
 import Footer from '../components/Footer';
 import { getProductDetails,getRelatedProductsByCategory  } from '../services/api';  // Import the API call
+import { isAuthenticated } from '../utils/auth'; // Import your auth functions
+
 
 const ProductPage = () => {
     const navigate = useNavigate();  // Initialize useNavigate
@@ -15,6 +17,7 @@ const ProductPage = () => {
     const [relatedProducts, setRelatedProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -55,7 +58,7 @@ const ProductPage = () => {
             <div className='h-[8vw] bg-[#F9F1E7] w-full flex items-center'>
                 <p className='text-xl font-light text-gray-600 tracking-wider ml-16'>Home <span className='font-bold text-black'>&gt;</span> Shop <span className='text-black font-bold'>&gt;</span> | {product.name}</p>
             </div>
-            <div className='mt-16 flex justify-center items-center '>
+            <div className='flex justify-center items-center '>
             <ProductDetails
             product={product}
             />

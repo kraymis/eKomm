@@ -4,6 +4,7 @@ import imgK from '../assets/k.png';
 import imgPerson from '../assets/person.png';
 import imgHeart from '../assets/heart.png';
 import imgPanier from '../assets/panier.png';
+import imgOrders from '../assets/shopping-bag.png';
 import imgSearch from '../assets/search.png';
 import { fetchAuthenticatedUser, fetchCartItemCount } from '../services/api'; // Import your API functions
 
@@ -85,6 +86,7 @@ const NavBar = () => {
               </span>
             </div>
           </li>
+
           {user && (
             <li>
               <button onClick={handleLogout} className='text-red-500'>

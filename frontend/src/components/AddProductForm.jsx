@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { uploadImagesToCloudinary } from '../services/api';
+import Spinner from './Spinner';
 
 const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
     const [product, setProduct] = useState({
@@ -13,6 +14,8 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
       category: '',
     });
     const [imageFiles, setImageFiles] = useState([]); // For storing image files locally
+    const [loading, setLoading] = useState(false);
+
 
   
     useEffect(() => {
@@ -53,31 +56,43 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
 
 
     const handleConfirm = async () => {
-      if (imageFiles.length > 0) {
-        const uploadedImages = await handleImageUpload();
-        console.log(uploadedImages);
+      setLoading(true); // Set loading to true when the process starts
     
-        // Update the product state with the uploaded images
-        setProduct((prevProduct) => {
-          const updatedProduct = {
-            ...prevProduct,
-            images: uploadedImages,
-          };
+      try {
+        if (imageFiles.length > 0) {
+          const uploadedImages = await handleImageUpload();
+          console.log(uploadedImages);
     
-          // Now, ensure the updated product is passed to onConfirm
-          onConfirm(updatedProduct);
-          return updatedProduct;
-        });
-      } else {
-        // If no images, directly confirm with the current product state
-        onConfirm(product);
+          // Update product state with the uploaded images
+          setProduct((prevProduct) => {
+            const updatedProduct = {
+              ...prevProduct,
+              images: uploadedImages,
+            };
+    
+            // Call onConfirm with the updated product
+            onConfirm(updatedProduct);
+            return updatedProduct;
+          });
+        } else {
+          onConfirm(product); // Call onConfirm if no images to upload
+        }
+      } catch (error) {
+        console.error("Error confirming product:", error);
+      } finally {
+        setLoading(false); // Set loading to false when the process ends
       }
     };
+    
     
   
     return (
       <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
         <div className="bg-white p-10 rounded-lg shadow-lg max-w-lg w-full h-[90vh] overflow-auto">
+        {loading ? (
+        <Spinner  />
+        ) : (
+          <div>
           <h2 className="text-2xl font-bold mb-4">{productToEdit ? 'Update Product' : 'Add New Product'}</h2>
   
           <div className="mb-4">
@@ -221,13 +236,19 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
             >
               Cancel
             </button>
+
+            
+
             <button 
-              onClick={handleConfirm} 
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={handleConfirm} 
+            className="bg-blue-500 text-white px-4 py-2 rounded"
             >
               {productToEdit ? 'Update' : 'Confirm'}
             </button>
+          
           </div>
+        </div>
+        )}
         </div>
       </div>
     );

@@ -4,6 +4,7 @@ import NavBar from '../components/NavBar';
 import imgShop from "../assets/shop.png"
 import { FaTrash } from 'react-icons/fa'; // Assuming you want a trash icon
 import imageSofa from '../assets/living (1).png';
+import imgPanier from '../assets/panier.png';
 import imgFrame from '../assets/frame.png';
 import Footer from '../components/Footer';
 import { fetchCart, updateCartItemQuantity, deleteCartItem } from '../services/api'; // Import your API functions
@@ -14,17 +15,12 @@ import { isAuthenticated } from '../utils/auth'; // Import your auth functions
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();  // Initialize useNavigate
 
 
-    useEffect(() => {
-        // If user is authenticated, redirect to home
-        if (!isAuthenticated()) {
-            navigate('/login');
-        }
-    }, [navigate]);
+
 
 
     // Fetch cart items when the component mounts
@@ -39,8 +35,9 @@ const CartPage = () => {
                 setLoading(false);
             }
         };
-
-        loadCart();
+        if (isAuthenticated()) {
+            loadCart();
+        }
     }, []);
 
     // Function to handle updating the quantity of an item
@@ -89,7 +86,27 @@ const CartPage = () => {
             </div>
 
             {/* Cart Items Section */}
-            <div className='flex justify-center w-[100%] gap-4 mt-16'>
+            <div className='flex justify-center w-[100%] gap-4 mt-8'>
+            {!isAuthenticated() ? (
+            <div className="flex flex-col justify-center items-center w-full text-gray-600">
+                <h2 className="text-2xl font-semibold mb-4">You Are Not Logged In</h2>
+                <p className="text-lg mb-4">Please log in to view and manage your cart.</p>
+                <button onClick={() => navigate('/login')} className="border-2 border-black px-6 py-2 rounded-lg font-semibold hover:border-golden hover:bg-golden hover:text-white">
+                    Log In
+                </button>
+            </div>    
+            ) : (
+            cartItems.length === 0 ? (
+                <div className="flex flex-col justify-center items-center w-full h-64 text-gray-600">
+                    <h2 className="text-2xl font-semibold mb-4">Your Cart is Empty</h2>
+                    <p className="text-lg">It looks like you haven't added anything to your cart yet.</p>
+                    <img src={imgPanier} alt="Empty Cart" className="w-32 h-32 mt-4 mb-4" />
+                    <button onClick={() => navigate('/shop')} className="mt-4 border-2 border-black px-6 py-2 rounded-lg font-semibold hover:border-golden hover:bg-golden hover:text-white">
+                        Shop Now
+                    </button>
+                </div>
+            ) : (
+                <>
                 <div className="overflow-x-auto w-[50%]">
                     <table className="min-w-full bg-white border-collapse">
                         <thead className="bg-amber-50 rounded">
@@ -148,10 +165,13 @@ const CartPage = () => {
                         Check Out
                     </button>
                 </div>
-            </div>
-
-            <div className='w-full h-auto mt-16'>
+                <div className='w-full h-auto mt-16'>
                 <img src={imgFrame} alt='frame' className='w-full h-full' />
+                </div>
+                </>
+            )
+            )}
+
             </div>
 
             <Footer />
