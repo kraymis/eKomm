@@ -51,6 +51,7 @@ const Admin = () => {
   const handleDeleteProduct = async (id) => {
     await deleteProduct(id);
     setProducts(products.filter((product) => product._id !== id));
+    setCurrentPage(1); // Reset to first page after deleting a product
     fetchProducts();
   };
 

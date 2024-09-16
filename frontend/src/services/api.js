@@ -360,3 +360,24 @@ export const fetchFavorites = async () => {
       throw error; // Propagate the error to handle it in the calling component
   }
 };
+
+// Function to upload images to Cloudinary
+export const uploadImagesToCloudinary = async (images) => {
+  const formData = new FormData();
+  
+  // Append each image to form data
+  images.forEach((image) => {
+    formData.append('images', image);
+  });
+  console.log('formData:', formData);
+
+  // Post images to the Cloudinary upload route
+  const response = await axios.post(`${API_URL}/cloudinary/upload-images`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  console.log('Cloudinary response.data:', response.data)
+
+  return response.data.urls[0]; // Array of URLs from Cloudinary
+};

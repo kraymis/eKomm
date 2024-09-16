@@ -5,6 +5,7 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const cloudinaryRoutes = require('./routes/cloudinaryRoutes');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
@@ -25,6 +26,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/cloudinary', cloudinaryRoutes);
+
 
 
 // Connect to MongoDB

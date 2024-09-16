@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { uploadImagesToCloudinary } from '../services/api';
 
 const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
     const [product, setProduct] = useState({
@@ -11,6 +12,8 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
       stockQuantity: '',
       category: '',
     });
+    const [imageFiles, setImageFiles] = useState([]); // For storing image files locally
+
   
     useEffect(() => {
       if (productToEdit) {
@@ -34,10 +37,43 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
       setProduct({ ...product, [name]: value });
       console.log(product)
     };
-  
-    const handleConfirm = () => {
-      onConfirm(product);
+
+    const handleImageUpload = async () => {
+      const uploadedImages = [];
+      for (let i = 0; i < imageFiles.length; i++) {
+        const formData = new FormData();
+        formData.append('file', imageFiles[i]);
+        formData.append('upload_preset', 'your_cloudinary_preset'); // Cloudinary preset
+        const uploadedImageUrl = await uploadImagesToCloudinary(formData);
+        uploadedImages.push(uploadedImageUrl); // Assuming the API returns the image URL
+      }
+      console.log(uploadedImages);
+      return uploadedImages;
     };
+
+
+    const handleConfirm = async () => {
+      if (imageFiles.length > 0) {
+        const uploadedImages = await handleImageUpload();
+        console.log(uploadedImages);
+    
+        // Update the product state with the uploaded images
+        setProduct((prevProduct) => {
+          const updatedProduct = {
+            ...prevProduct,
+            images: uploadedImages,
+          };
+    
+          // Now, ensure the updated product is passed to onConfirm
+          onConfirm(updatedProduct);
+          return updatedProduct;
+        });
+      } else {
+        // If no images, directly confirm with the current product state
+        onConfirm(product);
+      }
+    };
+    
   
     return (
       <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
@@ -103,17 +139,13 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
           </div>
   
           <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2 text-gray-700">Product Images (URLs)</label>
-            <input
-              type="text"
-              name="images"
-              value={product.images.join(', ')}
-              onChange={(e) => {
-                const urls = e.target.value.split(',').map((url) => url.trim());
-                setProduct({ ...product, images: urls });
-              }}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B88E2F] transition"
-            />
+          <label className="block text-lg font-semibold mb-2 text-gray-700">Upload Product Images</label>
+          <input
+            type="file"
+            multiple
+            onChange={(e) => setImageFiles([...e.target.files])}
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B88E2F] transition"
+          />
           </div>
   
           <div className="mb-4">
