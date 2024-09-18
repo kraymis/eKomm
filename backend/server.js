@@ -6,6 +6,8 @@ const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const cloudinaryRoutes = require('./routes/cloudinaryRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
@@ -27,6 +29,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/cloudinary', cloudinaryRoutes);
+app.use('/api/admin', adminRoutes);
+
 
 
 

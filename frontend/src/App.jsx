@@ -8,8 +8,10 @@ import CheckoutPage from './pages/CheckoutPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Admin from './pages/Admin';
+import AdminLogin from './pages/AdminLogin';
 import FavouritePage from './pages/FavouritePage';
 import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 // import Contact from './components/Contact';
 
 function App() {
@@ -24,9 +26,11 @@ function App() {
         <Route path='/checkout' element={<CheckoutPage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/admin' element={<Admin />} />
+        <Route path='/admin' element={<AdminLogin />} />
+        <Route path='/adminaccess' element={<Admin />} />
         <Route path='/favourite' element={<FavouritePage />} />
         <Route path='/about' element={<AboutPage />} />
+        <Route path='/contact' element={<ContactPage />} />
         {/* <Route path='/contact' element={<Contact />} /> */}
       </Routes>
     </Router>

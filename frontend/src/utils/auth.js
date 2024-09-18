@@ -12,3 +12,11 @@ export const signOut = (navigate) => {
     // Redirect to login or home page
     navigate('/login');
 };
+
+// auth.js
+export const isAdminAuthenticated = () => {
+    const token = localStorage.getItem('adminToken');
+    // Check if token exists and is valid
+    return !!token;
+};
+

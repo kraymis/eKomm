@@ -28,6 +28,20 @@ export const login = async (userData) => {
     }
 };
 
+// api.js
+export const adminLogin = async (adminData) => {
+  try {
+      const response = await axios.post(`${API_URL}/admin/login`, adminData);
+      if (response.data.token) {
+          localStorage.setItem('adminToken', response.data.token);
+      }
+      return response.data;
+  } catch (error) {
+      throw error;
+  }
+};
+
+
 // Function to get all products
 export const getAllProducts = async () => {
     try {
