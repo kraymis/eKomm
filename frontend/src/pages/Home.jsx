@@ -51,7 +51,7 @@ function Home() {
               <p className='font-medium text-sm tracking-wider'>New arrival</p>
               <h2 className='font-bold text-4xl w-[80%] text-[#B88E2F]'>Discover our new collection</h2>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis.</p>
-              <button className='bg-[#B88E2F] text-white px-10 py-4 font-medium w-[10vw] transition-colors duration-300 hover:bg-white hover:text-[#B88E2F]'>
+              <button onClick={()=>{navigate("/shop")}} className='bg-[#B88E2F] text-white px-10 py-4 font-medium w-[10vw] transition-colors duration-300 hover:bg-white hover:text-[#B88E2F]'>
                 Buy now
               </button>
             </div>
@@ -102,7 +102,7 @@ function Home() {
                 key={product._id}
                 image={product.images[0]} // Display the first image
                 name={product.name}
-                description={product.description}
+                description={product.short_description}
                 price={product.price}
                 onClick={() => navigate(`/product/${product._id}`)}
               />

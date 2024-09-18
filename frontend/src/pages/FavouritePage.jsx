@@ -95,7 +95,7 @@ const FavouritePage = () => {
                                 </div>
                                 <div className='h-[30%] flex flex-col p-4 gap-2'>
                                     <h4 className='font-semibold text-lg'>{item.name}</h4>
-                                    <p className='text-sm'>{item.description}</p>
+                                    <p className='text-sm'>{item.short_description}</p>
                                     <p className='font-semibold text-lg'>${item.price}</p>
                                 </div>
                                 <button

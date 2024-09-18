@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import imgK from '../assets/k.png';
+import imgK from '../assets/ekommK.png';
 import imgPerson from '../assets/person.png';
 import imgHeart from '../assets/heart.png';
 import imgPanier from '../assets/panier.png';
@@ -42,6 +42,7 @@ const NavBar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('adminToken');
     setToken(null);
     navigate('/login');
     // Redirect or update the UI as needed
@@ -69,7 +70,7 @@ const NavBar = () => {
         <ul className='flex items-center justify-center gap-16 h-auto w-full'>
 
           <li>
-            <div className='h-[4.2vh] w-auto hover:scale-105 transition-all duration-300 cursor-pointer' >
+            <div className='h-[4.2vh] w-auto hover:scale-105 transition-all duration-300 cursor-pointer' onClick={() => navigate('/login')} >
               <img src={imgPerson} alt='User' style={{ width: '100%', height: '100%' }} />
             </div>
           </li>

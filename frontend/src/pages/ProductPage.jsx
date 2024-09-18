@@ -69,7 +69,7 @@ const ProductPage = () => {
             <div className='flex flex-col justify-center items-center px-16 gap-8'>
                 <h5 className='text-[#333] font-medium text-3xl tracking-wide '>Description</h5>
                 <p className='text-gray-600 text-lg mt-4 w-[80%] text-center'>
-                {product.description}
+                {product.long_description}
                 </p>
                 <div className="relative w-full max-w-[80%] h-[60vh] rounded-xl mt-8 overflow-hidden">
                     <img src={product.images[0]} alt="Alternative image" className="absolute inset-0 w-full h-full object-cover" />

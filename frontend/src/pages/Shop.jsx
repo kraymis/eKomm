@@ -175,7 +175,7 @@ function Shop() {
             key={product._id} 
             name={product.name} 
             price={product.price}
-            description={product.description}
+            description={product.short_description}
             image={product.images[0]}
             category={product.category}
           />

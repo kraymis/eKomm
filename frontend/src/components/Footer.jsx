@@ -9,15 +9,15 @@ const Footer = () => {
         <div className='flex flex-wrap justify-between'>
           {/* Logo and Description */}
           <div className='w-full md:w-1/4 mb-6'>
-            <h2 className='text-2xl font-bold mb-2'>YourLogo</h2>
-            <p className='text-sm'>© 2024 Your Company. All rights reserved.</p>
+            <h2 className='text-2xl font-bold mb-2'>eKomm</h2>
+            <p className='text-sm'>© 2024 eKomm. All rights reserved.</p>
           </div>
           
           {/* Navigation Links */}
           <div className='w-full md:w-1/4 mb-6'>
             <h3 className='text-lg font-semibold mb-2'>Links</h3>
             <ul>
-              <li><Link to="/home" className='hover:text-[#B88E2F]'>Home</Link></li>
+              <li><Link to="/" className='hover:text-[#B88E2F]'>Home</Link></li>
               <li><Link to="/shop" className='hover:text-[#B88E2F]'>Shop</Link></li>
               <li><Link to="/contact" className='hover:text-[#B88E2F]'>Contact</Link></li>
             </ul>
@@ -26,7 +26,7 @@ const Footer = () => {
           {/* Contact Information */}
           <div className='w-full md:w-1/4 mb-6'>
             <h3 className='text-lg font-semibold mb-2'>Contact Us</h3>
-            <p className='text-sm'>Email: support@yourcompany.com</p>
+            <p className='text-sm'>Email: support@ekomm.com</p>
             <p className='text-sm'>Phone: (123) 456-7890</p>
           </div>
           

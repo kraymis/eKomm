@@ -33,7 +33,7 @@ const ProductSlider = ({products}) => {
               id={product._id} // Pass product ID
               image={product.images[0]}
               name={product.name}
-              description={product.description}
+              description={product.short_description}
               price={product.price}
             />
           </SwiperSlide>

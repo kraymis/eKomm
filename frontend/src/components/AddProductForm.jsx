@@ -3,9 +3,12 @@ import { uploadImagesToCloudinary } from '../services/api';
 import Spinner from './Spinner';
 
 const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
+  console.log("AddProductForm rendered");
+
     const [product, setProduct] = useState({
       name: '',
-      description: '',
+      short_description: '',
+      long_description: '',
       price: '',
       images: [],
       availableSizes: [],
@@ -24,7 +27,8 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
       } else {
         setProduct({
           name: '',
-          description: '',
+          short_description: '',
+          long_description: '',
           price: '',
           images: [],
           availableSizes: [],
@@ -107,10 +111,19 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
           </div>
   
           <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2 text-gray-700">Description</label>
+            <label className="block text-lg font-semibold mb-2 text-gray-700">Short Description</label>
             <textarea
-              name="description"
-              value={product.description}
+              name="short_description"
+              value={product.short_description}
+              onChange={handleChange}
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B88E2F] transition"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2 text-gray-700">Long Description</label>
+            <textarea
+              name="long_description"
+              value={product.long_description}
               onChange={handleChange}
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B88E2F] transition"
             />

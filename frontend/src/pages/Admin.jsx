@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { getAllProducts, addProduct, deleteProduct, updateProduct, getOrders, updateOrderStatus,getAllCategories } from '../services/api'; // Import API functions
 import AddProductForm from '../components/AddProductForm';
 import OrdersSection from '../components/OrdersSection';
+import { isAdminAuthenticated } from '../utils/auth'; // Admin auth utility
 
 const Admin = () => {
   const [view, setView] = useState('products'); // Switch between 'products' and 'orders'
@@ -19,7 +20,12 @@ const Admin = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 6;
   const navigate = useNavigate(); // Initialize useNavigate
-  
+
+  useEffect(() => {
+    if (!isAdminAuthenticated()) {
+        navigate('/admin');
+    }
+}, [navigate]);
   useEffect(() => {
     if (view === 'products') {
       fetchProducts();
@@ -44,6 +50,7 @@ const Admin = () => {
   };
 
   const handleAddProduct = async (product) => {
+    // console.log("meow")
     const newProduct = await addProduct(product);
     setProducts([...products, newProduct]);
     setShowAddProductForm(false); // Close the form after adding the product

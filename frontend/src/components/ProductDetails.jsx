@@ -38,7 +38,6 @@ const ProductDetails = ({product}) => {
       }
     }, [product._id]);
 
-  // setMainImage(product.images[0]);
 
     // Function to handle adding or removing product from cart
     const handleCartToggle = async () => {
@@ -172,7 +171,7 @@ const ProductDetails = ({product}) => {
             </div>
             <div className="w-[80%]">
                 <p className="text-black">
-                {product.description}
+                {product.short_description}
                 </p>
             </div>
             
@@ -238,7 +237,7 @@ const ProductDetails = ({product}) => {
 
               <button
                   onClick={handleCartToggle}
-                  className="bg-transparent text-black h-full rounded-lg border border-black  px-10 hover:bg-blue-600"
+                  className="bg-transparent text-black h-full rounded-lg border border-black  px-10 hover:bg-golden hover:text-white hover:border-golden"
               >
               {inCart ? 'Remove from Cart' : 'Add to Cart'}
               </button>

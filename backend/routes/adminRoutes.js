@@ -1,7 +1,7 @@
 // routes/adminRoutes.js
 const express = require('express');
 const router = express.Router();
-const { adminLogin } = require('../controllers/adminController');
+const { adminLogin ,registerAdmin} = require('../controllers/adminController');
 
 // Admin login route
 router.post('/login', adminLogin);

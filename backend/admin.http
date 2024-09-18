@@ -1,0 +1,55 @@
+### Add a new product
+POST http://localhost:5000/api/products
+Content-Type: application/json
+
+{
+  "name": "Khtek",
+  "short_description": "Trench avec ceinture, disponible en plusieurs couleurs.",
+  "long_description": "Trench avec col à revers, ceinture avec passants, poches sur les côtés et double boutonnage sur le devant. Disponible en plusieurs couleurs pour s'adapter à toutes vos envies.",
+  "price": 9900,
+  "images": [
+    "https://res.cloudinary.com/dz7k8ul4v/image/upload/v1726702124/grjvqoramyw0yhzuguav.jpg",
+    "https://res.cloudinary.com/dz7k8ul4v/image/upload/v1726702125/syirz8prqnojf7l6yxep.jpg",
+    "https://res.cloudinary.com/dz7k8ul4v/image/upload/v1726702125/uphwwhpkqsec1coxhael.jpg",
+    "https://res.cloudinary.com/dz7k8ul4v/image/upload/v1726702126/dzjkafcv9xzcacd00tmw.jpg",
+    "https://res.cloudinary.com/dz7k8ul4v/image/upload/v1726702127/vigq1hc8smsc7dxz0mit.jpg"
+  ],
+  "availableSizes": ["S", "M", "L", "XL"],
+  "availableColors": [
+    { "colorName": "Kaki", "hexCode": "#4A5A41" },
+    { "colorName": "Noir", "hexCode": "#000000" }
+  ],
+  "stockQuantity": 50,
+  "category": "Outerwear"
+}
+
+### Get all products
+GET http://localhost:5000/products
+
+### Get a product by ID
+GET http://localhost:5000/products/1234567890abcdef
+
+### Update a product
+PUT http://localhost:5000/products/1234567890abcdef
+Content-Type: application/json
+
+{
+  "name": "Khtek",
+  "short_description": "Updated short description.",
+  "long_description": "Updated long description.",
+  "price": 9999,
+  "images": [
+    "https://res.cloudinary.com/dz7k8ul4v/image/upload/v1726702124/grjvqoramyw0yhzuguav.jpg",
+    "https://res.cloudinary.com/dz7k8ul4v/image/upload/v1726702125/syirz8prqnojf7l6yxep.jpg"
+  ],
+  "availableSizes": ["S", "M", "L", "XL"],
+  "availableColors": [
+    { "colorName": "Kaki", "hexCode": "#4A5A41" },
+    { "colorName": "Noir", "hexCode": "#000000" }
+  ],
+  "stockQuantity": 60,
+  "category": "Outerwear"
+}
+
+### Delete a product
+DELETE http://localhost:5000/products/1234567890abcdef

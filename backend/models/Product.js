@@ -9,7 +9,11 @@ const productSchema = new Schema({
     required: true,
     trim: true
   },
-  description: {
+  short_description: {
+    type: String,
+    required: true
+  },
+  long_description: {
     type: String,
     required: true
   },
@@ -51,7 +55,7 @@ const productSchema = new Schema({
   ],
   averageRating: {
     type: Number,
-    default: 0
+    default: 4.5
   },
   createdAt: {
     type: Date,

@@ -92,7 +92,8 @@ const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const {
     name,
-    description,
+    short_description,
+    long_description,
     price,
     images,
     availableSizes,
@@ -106,7 +107,8 @@ const updateProduct = asyncHandler(async (req, res) => {
       id,
       {
         name,
-        description,
+        short_description,
+        long_description,
         price,
         images,
         availableSizes,
