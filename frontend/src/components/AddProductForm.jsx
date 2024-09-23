@@ -60,33 +60,31 @@ const AddProductForm = ({ onClose, onConfirm,productToEdit  }) => {
 
 
     const handleConfirm = async () => {
-      setLoading(true); // Set loading to true when the process starts
-    
+      setLoading(true); // Start loading indicator
+      
       try {
+        let updatedProduct = { ...product };
+    
         if (imageFiles.length > 0) {
-          const uploadedImages = await handleImageUpload();
-          console.log(uploadedImages);
-    
-          // Update product state with the uploaded images
-          setProduct((prevProduct) => {
-            const updatedProduct = {
-              ...prevProduct,
-              images: uploadedImages,
-            };
-    
-            // Call onConfirm with the updated product
-            onConfirm(updatedProduct);
-            return updatedProduct;
-          });
-        } else {
-          onConfirm(product); // Call onConfirm if no images to upload
+          const uploadedImages = await handleImageUpload(); // Upload images
+          
+          // Append new images to the existing images
+          updatedProduct = {
+            ...updatedProduct,
+            images: [...updatedProduct.images, ...uploadedImages],
+          };
         }
+    
+        // Call onConfirm with the final updated product
+        onConfirm(updatedProduct);
+    
       } catch (error) {
         console.error("Error confirming product:", error);
       } finally {
-        setLoading(false); // Set loading to false when the process ends
+        setLoading(false); // Stop loading indicator
       }
     };
+    
     
     
   

@@ -18,6 +18,7 @@ const Admin = () => {
   const [currentProducts, setCurrentProducts] = useState([]);
   const [categories, setCategories] = useState([]); // State for categories
   const [currentPage, setCurrentPage] = useState(1);
+  const [booleanVAR, setBoolean] = useState(false);
   const productsPerPage = 6;
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -32,7 +33,7 @@ const Admin = () => {
     } else if (view === 'orders') {
       fetchOrders();
     }
-  }, [view]);
+  }, [view,booleanVAR]);
 
 
   const fetchProducts = async () => {
@@ -288,10 +289,16 @@ const Admin = () => {
         )}
 
         {view === 'orders' && (
+          <div className='flex flex-col'>
+            <div className='flex justify-center flex-col items-center p-8'>
+            <h2 className="text-6xl font-bold mb-4">Orders</h2>
+            <div className="w-[60%] rounded h-1 bg-golden mb-4"></div>
+            </div>
           <OrdersSection 
             orders={orders}
             onUpdateOrderStatus={handleUpdateOrderStatus}
           />
+          </div>
         )}
       </div>
 
@@ -304,6 +311,7 @@ const Admin = () => {
           }} 
 
           onConfirm={(product) => {
+            setBoolean(!booleanVAR)
             if (productToEdit) {
               handleUpdateProduct(productToEdit._id, product); // Update product
             } else {
